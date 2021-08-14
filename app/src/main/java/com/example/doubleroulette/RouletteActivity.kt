@@ -19,14 +19,31 @@ class RouletteActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
+        setupAd()
+        setupBackButton()
+        setupStartButton()
+
         // ルーレットセルデータを取得
         val cellData = intent.getStringExtra("CELL_DATA")
         println(cellData) // TODO: デバッグ用コードなので後ほど削除
         // TODO: セルデータを活用する処理を追記
 
-        // 設定画面に戻る処理
-        binding.backButton.setOnClickListener { finish() }
+    }
 
+    // AdMobの広告の設定
+    private fun setupAd() {
+        bottomBannerAdView = findViewById(R.id.bottomBannerAdView2)
+        val adRequest = AdRequest.Builder().build()
+        bottomBannerAdView.loadAd(adRequest)
+    }
+
+    // BACKボタンの設定
+    private fun setupBackButton() {
+        binding.backButton.setOnClickListener { finish() }
+    }
+
+    // STARTボタンの設定（音楽の設定含む）
+    private fun setupStartButton() {
         // 音楽データの取得
         player = MediaPlayer.create(this, R.raw.roulette_sound)
         // ルーレットを回す処理
@@ -35,11 +52,6 @@ class RouletteActivity : AppCompatActivity() {
             player.start()
             // TODO: ルーレットを回す処理を追記
         }
-
-        // AdMobの初期化処理
-        bottomBannerAdView = findViewById(R.id.bottomBannerAdView2)
-        val adRequest = AdRequest.Builder().build()
-        bottomBannerAdView.loadAd(adRequest)
-
     }
+
 }

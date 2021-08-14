@@ -19,10 +19,28 @@ class MainActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
+        setupAd()
+        setupAddButton()
+        setupToRouletteButton()
+    }
+
+    // AdMobの広告設定
+    private fun setupAd() {
+        MobileAds.initialize(this) {}
+        bottomBannerAdView = findViewById(R.id.bottomBannerAdView)
+        val adRequest = AdRequest.Builder().build()
+        bottomBannerAdView.loadAd(adRequest)
+    }
+
+    // ADDボタンの設定
+    private fun setupAddButton() {
         binding.addButton.setOnClickListener {
             // TODO: ボタン押下時の処理を追記（セルの追加）
         }
+    }
 
+    // STARTボタンの設定
+    private fun setupToRouletteButton() {
         binding.toRouletteButton.setOnClickListener {
             // ルーレット画面へ遷移
             val intent = Intent(this, RouletteActivity::class.java)
@@ -30,12 +48,6 @@ class MainActivity : AppCompatActivity() {
             intent.putExtra("CELL_DATA", "put map data")
             startActivity(intent)
         }
-
-        // AdMobの初期化処理
-        MobileAds.initialize(this) {}
-        bottomBannerAdView = findViewById(R.id.bottomBannerAdView)
-        val adRequest = AdRequest.Builder().build()
-        bottomBannerAdView.loadAd(adRequest)
     }
 
 }
