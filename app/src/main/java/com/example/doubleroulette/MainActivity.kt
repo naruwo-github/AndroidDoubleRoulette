@@ -14,9 +14,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(view)
 
         binding.addButton.setOnClickListener {
-            // TODO: ボタン押下時の処理を追記
+            // TODO: ボタン押下時の処理を追記（セルの追加）
         }
 
+        binding.toRouletteButton.setOnClickListener {
+            // TODO: ボタン押下時の処理を追記（ルーレット画面へ遷移）
+        }
     }
 
 }

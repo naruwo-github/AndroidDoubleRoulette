@@ -28,4 +28,16 @@
         app:layout_constraintStart_toStartOf="@+id/settingTopView"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <Button
+        android:id="@+id/toRouletteButton"
+        android:layout_width="100dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="20dp"
+        android:text="@string/play_button"
+        android:textColor="#D7CCC8"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
