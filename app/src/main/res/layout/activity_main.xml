@@ -29,6 +29,17 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
+        android:id="@+id/clearButton"
+        android:layout_width="100dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="5dp"
+        android:text="@string/clear_button"
+        android:textSize="19sp"
+        app:layout_constraintEnd_toStartOf="@+id/toRouletteButton"
+        app:layout_constraintStart_toEndOf="@+id/addButton"
+        app:layout_constraintTop_toTopOf="@+id/settingTopView" />
+
+    <Button
         android:id="@+id/toRouletteButton"
         android:layout_width="100dp"
         android:layout_height="48dp"

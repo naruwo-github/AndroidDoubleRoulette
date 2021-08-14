@@ -14,20 +14,19 @@ class RouletteActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        binding = ActivityRouletteBinding.inflate(layoutInflater)
-        val view = binding.root
-        setContentView(view)
+        initView()
 
         setupAd()
         setupBackButton()
         setupStartButton()
 
-        // ルーレットセルデータを取得
-        val cellData = intent.getStringExtra("CELL_DATA")
-        println(cellData) // TODO: デバッグ用コードなので後ほど削除
-        // TODO: セルデータを活用する処理を追記
+    }
 
+    // 本Viewの初期化処理
+    private fun initView() {
+        binding = ActivityRouletteBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
     }
 
     // AdMobの広告の設定
@@ -46,12 +45,29 @@ class RouletteActivity : AppCompatActivity() {
     private fun setupStartButton() {
         // 音楽データの取得
         player = MediaPlayer.create(this, R.raw.roulette_sound)
-        // ルーレットを回す処理
+        // STARTボタンのイベント設定
         binding.startButton.setOnClickListener {
-            // TODO: ドラムロールを鳴らす処理を追記
+            // ドラムロールを開始
             player.start()
             // TODO: ルーレットを回す処理を追記
         }
+    }
+
+    // ルーレットデータの取得
+    private fun setupRoulette() {
+        // TODO: モックのルーレットデータを取得
+        val outerItem = intent.getStringArrayExtra("OUTER_CELL_ITEM_DATA")
+        val innerItem = intent.getStringArrayExtra("INNER_CELL_ITEM_DATA")
+        val outerColor = intent.getStringArrayExtra("OUTER_CELL_COLOR_DATA")
+        val innerColor = intent.getStringArrayExtra("INNER_CELL_COLOR_DATA")
+        // ルーレットの描画
+        drawRoulette(outerItem, innerItem, outerColor, innerColor)
+    }
+
+    // ルーレットの描画関数
+    private fun drawRoulette(outerItem: Array<String>?, innerItem: Array<String>?, outerColor: Array<String>?, innerColor: Array<String>?) {
+        // TODO: ルーレットの表示処理を追記するべし
+        // TODO: nullチェックを必ずすべし
     }
 
 }
