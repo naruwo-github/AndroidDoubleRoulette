@@ -20,6 +20,7 @@ class RouletteActivity : AppCompatActivity() {
         setupBackButton()
         setupStartButton()
 
+        setupRoulette()
     }
 
     // 本Viewの初期化処理

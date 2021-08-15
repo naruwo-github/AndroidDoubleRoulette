@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity() {
     )
     private val cellColorDataMock: Array<Array<String>> = arrayOf(
         arrayOf("#ff0000", "#00ff00", "#0000ff", "#ffff00", "#ff00ff"),
-        arrayOf("#00ffff", "#f0f0f0", "#0f0f0f")
+        arrayOf("#00f0ff", "#f0f0f0", "#0f0f0f")
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
