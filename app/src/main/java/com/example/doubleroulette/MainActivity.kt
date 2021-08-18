@@ -1,16 +1,23 @@
 package com.example.doubleroulette
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.AttributeSet
+import android.view.View
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.doubleroulette.databinding.ActivityMainBinding
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
+import io.realm.Realm
+import io.realm.kotlin.where
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var bottomBannerAdView: AdView
+    private lateinit var realm: Realm
 
     // TODO: モック↓↓↓
     private val cellItemDataMock: Array<Array<String>> = arrayOf(
@@ -24,12 +31,28 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        realm = Realm.getDefaultInstance()
+
         initView()
 
         setupAd()
         setupAddButton()
         setupClearButton()
         setupToRouletteButton()
+
+        // *** データベースから取得した全てのスケジュールをRecyclerViewに表示する準備 ***
+        // Realmインスタンスからデータを取得（ここではDoubleRouletteModelクラスのデータを全て取得）
+        val roulette = realm.where<DoubleRouletteModel>().findAll()
+        // DoubleRouletteModelAdapterのインスタンスを生成して、RecyclerViewに設定
+        val adapter = DoubleRouletteModelAdapter(roulette)
+        binding.recyclerView.adapter = adapter
+        // *******************************************************************
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        // Realmインスタンスの破棄＆開放
+        realm.close()
     }
 
     // 本Viewの初期化処理
