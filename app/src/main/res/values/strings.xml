@@ -5,4 +5,7 @@
     <string name="back_button">Back</string>
     <string name="start_button">Start</string>
     <string name="clear_button">Clear</string>
+    <string name="inner_switch">Inner</string>
+    <string name="color_button">Color</string>
+    <string name="item_name_text">Item</string>
 </resources>
