@@ -1,35 +1,43 @@
 package com.example.doubleroulette
 
+import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.AttributeSet
+import android.view.View
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.doubleroulette.databinding.ActivityMainBinding
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
+import com.google.android.material.snackbar.Snackbar
+import io.realm.Realm
+import io.realm.kotlin.createObject
+import io.realm.kotlin.where
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var bottomBannerAdView: AdView
-
-    // TODO: モック↓↓↓
-    private val cellItemDataMock: Array<Array<String>> = arrayOf(
-        arrayOf("outer1", "outer2", "outer3", "outer4", "outer5"),
-        arrayOf("inner1", "inner2", "inner3")
-    )
-    private val cellColorDataMock: Array<Array<String>> = arrayOf(
-        arrayOf("#ff0000", "#00ff00", "#0000ff", "#ffff00", "#ff00ff"),
-        arrayOf("#00f0ff", "#f0f0f0", "#0f0f0f")
-    )
+    private lateinit var realm: Realm
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        realm = Realm.getDefaultInstance()
+
         initView()
+        setupRecyclerView()
 
         setupAd()
         setupAddButton()
         setupClearButton()
         setupToRouletteButton()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        realm.close()
     }
 
     // 本Viewの初期化処理
@@ -39,7 +47,15 @@ class MainActivity : AppCompatActivity() {
         setContentView(view)
     }
 
-    // AdMobの広告設定
+    // データベースから取得した全てのスケジュールをRecyclerViewに表示する準備
+    private fun setupRecyclerView() {
+        // データを一列で表示するようにLayoutManagerを設定
+        binding.recyclerView.layoutManager = LinearLayoutManager(this)
+        val roulette = realm.where<DoubleRouletteModel>().findAll()
+        val adapter = DoubleRouletteModelAdapter(roulette)
+        binding.recyclerView.adapter = adapter
+    }
+
     private fun setupAd() {
         MobileAds.initialize(this) {}
         bottomBannerAdView = findViewById(R.id.bottomBannerAdView)
@@ -47,32 +63,27 @@ class MainActivity : AppCompatActivity() {
         bottomBannerAdView.loadAd(adRequest)
     }
 
-    // ADDボタンの設定
     private fun setupAddButton() {
         binding.addButton.setOnClickListener {
-            // TODO: ボタン押下時の処理を追記（セルの追加）
+            realm.executeTransaction { db: Realm ->
+                val maxId = db.where<DoubleRouletteModel>().max("id")
+                val nextId = (maxId?.toLong() ?: 0L) + 1L
+                db.createObject<DoubleRouletteModel>(nextId)
+            }
         }
     }
 
-    // CLEARボタンの設定
     private fun setupClearButton() {
         binding.clearButton.setOnClickListener {
-            // TODO: セルデータを全て削除する処理を追記
+            realm.executeTransaction { db: Realm ->
+                db.deleteAll()
+            }
         }
     }
 
-    // STARTボタンの設定
     private fun setupToRouletteButton() {
         binding.toRouletteButton.setOnClickListener {
-            // ルーレット画面へ遷移
             val intent = Intent(this, RouletteActivity::class.java)
-
-            // TODO: ここでルーレットセルのデータを渡す（map<string, array<string>>かな？）
-            intent.putExtra("OUTER_CELL_ITEM_DATA", cellItemDataMock[0])
-            intent.putExtra("INNER_CELL_ITEM_DATA", cellItemDataMock[1])
-            intent.putExtra("OUTER_CELL_COLOR_DATA", cellColorDataMock[0])
-            intent.putExtra("INNER_CELL_COLOR_DATA", cellColorDataMock[1])
-
             startActivity(intent)
         }
     }
