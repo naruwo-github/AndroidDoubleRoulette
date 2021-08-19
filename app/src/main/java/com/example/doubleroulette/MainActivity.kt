@@ -19,34 +19,17 @@ class MainActivity : AppCompatActivity() {
     private lateinit var bottomBannerAdView: AdView
     private lateinit var realm: Realm
 
-    // TODO: モック↓↓↓
-    private val cellItemDataMock: Array<Array<String>> = arrayOf(
-        arrayOf("outer1", "outer2", "outer3", "outer4", "outer5"),
-        arrayOf("inner1", "inner2", "inner3")
-    )
-    private val cellColorDataMock: Array<Array<String>> = arrayOf(
-        arrayOf("#ff0000", "#00ff00", "#0000ff", "#ffff00", "#ff00ff"),
-        arrayOf("#00f0ff", "#f0f0f0", "#0f0f0f")
-    )
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         realm = Realm.getDefaultInstance()
 
         initView()
+        setupRecyclerView()
 
         setupAd()
         setupAddButton()
         setupClearButton()
         setupToRouletteButton()
-
-        // *** データベースから取得した全てのスケジュールをRecyclerViewに表示する準備 ***
-        // Realmインスタンスからデータを取得（ここではDoubleRouletteModelクラスのデータを全て取得）
-        val roulette = realm.where<DoubleRouletteModel>().findAll()
-        // DoubleRouletteModelAdapterのインスタンスを生成して、RecyclerViewに設定
-        val adapter = DoubleRouletteModelAdapter(roulette)
-        binding.recyclerView.adapter = adapter
-        // *******************************************************************
     }
 
     override fun onDestroy() {
@@ -60,6 +43,15 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+    }
+
+    // データベースから取得した全てのスケジュールをRecyclerViewに表示する準備
+    private fun setupRecyclerView() {
+        // データを一列で表示するようにLayoutManagerを設定
+        binding.recyclerView.layoutManager = LinearLayoutManager(this)
+        val roulette = realm.where<DoubleRouletteModel>().findAll()
+        val adapter = DoubleRouletteModelAdapter(roulette)
+        binding.recyclerView.adapter = adapter
     }
 
     // AdMobの広告設定
@@ -89,13 +81,6 @@ class MainActivity : AppCompatActivity() {
         binding.toRouletteButton.setOnClickListener {
             // ルーレット画面へ遷移
             val intent = Intent(this, RouletteActivity::class.java)
-
-            // TODO: ここでルーレットセルのデータを渡す（map<string, array<string>>かな？）
-            intent.putExtra("OUTER_CELL_ITEM_DATA", cellItemDataMock[0])
-            intent.putExtra("INNER_CELL_ITEM_DATA", cellItemDataMock[1])
-            intent.putExtra("OUTER_CELL_COLOR_DATA", cellColorDataMock[0])
-            intent.putExtra("INNER_CELL_COLOR_DATA", cellColorDataMock[1])
-
             startActivity(intent)
         }
     }
