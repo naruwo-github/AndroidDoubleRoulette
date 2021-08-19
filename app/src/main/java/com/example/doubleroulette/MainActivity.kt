@@ -2,6 +2,7 @@ package com.example.doubleroulette
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.AttributeSet
@@ -11,7 +12,9 @@ import com.example.doubleroulette.databinding.ActivityMainBinding
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
+import com.google.android.material.snackbar.Snackbar
 import io.realm.Realm
+import io.realm.kotlin.createObject
 import io.realm.kotlin.where
 
 class MainActivity : AppCompatActivity() {
@@ -34,7 +37,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        // Realmインスタンスの破棄＆開放
         realm.close()
     }
 
@@ -54,7 +56,6 @@ class MainActivity : AppCompatActivity() {
         binding.recyclerView.adapter = adapter
     }
 
-    // AdMobの広告設定
     private fun setupAd() {
         MobileAds.initialize(this) {}
         bottomBannerAdView = findViewById(R.id.bottomBannerAdView)
@@ -62,24 +63,26 @@ class MainActivity : AppCompatActivity() {
         bottomBannerAdView.loadAd(adRequest)
     }
 
-    // ADDボタンの設定
     private fun setupAddButton() {
         binding.addButton.setOnClickListener {
-            // TODO: ボタン押下時の処理を追記（セルの追加）
+            realm.executeTransaction { db: Realm ->
+                val maxId = db.where<DoubleRouletteModel>().max("id")
+                val nextId = (maxId?.toLong() ?: 0L) + 1L
+                db.createObject<DoubleRouletteModel>(nextId)
+            }
         }
     }
 
-    // CLEARボタンの設定
     private fun setupClearButton() {
         binding.clearButton.setOnClickListener {
-            // TODO: セルデータを全て削除する処理を追記
+            realm.executeTransaction { db: Realm ->
+                db.deleteAll()
+            }
         }
     }
 
-    // STARTボタンの設定
     private fun setupToRouletteButton() {
         binding.toRouletteButton.setOnClickListener {
-            // ルーレット画面へ遷移
             val intent = Intent(this, RouletteActivity::class.java)
             startActivity(intent)
         }

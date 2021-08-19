@@ -23,7 +23,7 @@ class DoubleRouletteModelAdapter(data: OrderedRealmCollection<DoubleRouletteMode
     // セルに使用するビューを保持するためのクラス
     // セル1行分のレイアウトを定義するクラス
     class ViewHolder(cell: View) : RecyclerView.ViewHolder(cell) {
-        val isInnerSwitch: SwitchCompat = cell.findViewById(R.id.isInnerSwitch)   // 内側かどうかを表すタイプのスイッチ？セグメントコントロール？
+        val isInnerSwitch: Switch = cell.findViewById(R.id.isInnerSwitch)   // 内側かどうかを表すタイプのスイッチ？セグメントコントロール？
         val itemNameText: TextView = cell.findViewById(R.id.itemNameText)   // ルーレット要素の名前のビュー
         val colorButton: Button = cell.findViewById(R.id.colorButton)       // ルーレット要素の色のビュー
     }

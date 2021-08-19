@@ -34,19 +34,16 @@ class RouletteActivity : AppCompatActivity() {
         setContentView(view)
     }
 
-    // AdMobの広告の設定
     private fun setupAd() {
         bottomBannerAdView = findViewById(R.id.bottomBannerAdView2)
         val adRequest = AdRequest.Builder().build()
         bottomBannerAdView.loadAd(adRequest)
     }
 
-    // BACKボタンの設定
     private fun setupBackButton() {
         binding.backButton.setOnClickListener { finish() }
     }
 
-    // STARTボタンの設定（音楽の設定含む）
     private fun setupStartButton() {
         // 音楽データの取得
         player = MediaPlayer.create(this, R.raw.roulette_sound)
@@ -58,16 +55,14 @@ class RouletteActivity : AppCompatActivity() {
         }
     }
 
-    // ルーレットデータの取得
     private fun setupRoulette() {
         // ルーレットデータを取得
         val roulette = realm.where<DoubleRouletteModel>().findAll()
 
         // TODO: ルーレットの描画処理を行う
-        drawRoulette(outerItem, innerItem, outerColor, innerColor)
+//        drawRoulette(outerItem, innerItem, outerColor, innerColor)
     }
 
-    // ルーレットの描画関数
     private fun drawRoulette(outerItem: Array<String>?, innerItem: Array<String>?, outerColor: Array<String>?, innerColor: Array<String>?) {
         // TODO: ルーレットの表示処理を追記するべし
         // TODO: nullチェックを必ずすべし
