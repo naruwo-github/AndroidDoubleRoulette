@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Switch
 import android.widget.TextView
+import androidx.appcompat.widget.SwitchCompat
 import androidx.recyclerview.widget.RecyclerView
 import io.realm.OrderedRealmCollection
 import io.realm.RealmRecyclerViewAdapter
@@ -20,9 +21,9 @@ class DoubleRouletteModelAdapter(data: OrderedRealmCollection<DoubleRouletteMode
     }
 
     // セルに使用するビューを保持するためのクラス
-    // セルとは、表示したい項目をグループ化した単位で、この例の場合は1つのスケジュールの日付とタイトルをセットにしたもの
+    // セル1行分のレイアウトを定義するクラス
     class ViewHolder(cell: View) : RecyclerView.ViewHolder(cell) {
-        val isInnerSwitch: Switch = cell.findViewById(R.id.isInnerSwitch)   // 内側かどうかを表すタイプのスイッチ？セグメントコントロール？
+        val isInnerSwitch: SwitchCompat = cell.findViewById(R.id.isInnerSwitch)   // 内側かどうかを表すタイプのスイッチ？セグメントコントロール？
         val itemNameText: TextView = cell.findViewById(R.id.itemNameText)   // ルーレット要素の名前のビュー
         val colorButton: Button = cell.findViewById(R.id.colorButton)       // ルーレット要素の色のビュー
     }
@@ -37,6 +38,7 @@ class DoubleRouletteModelAdapter(data: OrderedRealmCollection<DoubleRouletteMode
         return ViewHolder(view)
     }
 
+    // 1行分のViewHolderの詳細設定をする関数
     override fun onBindViewHolder(holder: DoubleRouletteModelAdapter.ViewHolder, position: Int) {
         val roulette: DoubleRouletteModel? = getItem(position)
         holder.isInnerSwitch.isChecked = roulette?.isInner == true
