@@ -7,27 +7,36 @@
     android:splitMotionEvents="false"
     tools:context=".RouletteActivity">
 
+    <View
+        android:id="@+id/rouletteTopView"
+        android:layout_width="wrap_content"
+        android:layout_height="55dp"
+        android:background="@android:color/darker_gray"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <Button
         android:id="@+id/backButton"
         android:layout_width="100dp"
         android:layout_height="48dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginBottom="50dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="5dp"
         android:text="@string/back_button"
         android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/startButton"
         android:layout_width="100dp"
         android:layout_height="48dp"
-        android:layout_marginEnd="30dp"
-        android:layout_marginBottom="50dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="20dp"
         android:text="@string/start_button"
         android:textSize="19sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.gms.ads.AdView
         android:id="@+id/bottomBannerAdView2"
@@ -40,6 +49,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
     <!-- real adId = ca-app-pub-6492692627915720/1983768260 -->
 
 </androidx.constraintlayout.widget.ConstraintLayout>
