@@ -49,6 +49,18 @@ class MainActivity : AppCompatActivity() {
         val roulette = realm.where<DoubleRouletteModel>().findAll()
         val adapter = DoubleRouletteModelAdapter(roulette)
         binding.recyclerView.adapter = adapter
+        adapter.setDeleteListener { id ->
+            id?.let {
+                deleteDataById(it)
+            }
+        }
+    }
+
+    private fun deleteDataById(id: Long) {
+        realm.executeTransaction { db: Realm ->
+            val roulette = db.where<DoubleRouletteModel>().equalTo("id", id).findFirst()
+            roulette?.deleteFromRealm()
+        }
     }
 
     private fun setupAd() {

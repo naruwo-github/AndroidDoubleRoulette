@@ -12,6 +12,12 @@ import io.realm.RealmRecyclerViewAdapter
 
 class DoubleRouletteModelAdapter(data: OrderedRealmCollection<DoubleRouletteModel>) : RealmRecyclerViewAdapter<DoubleRouletteModel, DoubleRouletteModelAdapter.ViewHolder>(data, true) {
 
+    // セルの削除処理をする関数
+    private var deleteListener: ((Long?) -> Unit)? = null
+    fun setDeleteListener(listener: (Long?) -> Unit) {
+        deleteListener = listener
+    }
+
     // RecyclerView高速化のためのテクニック
     init {
         // データセット内の項目に一位の識別子があるかどうかを設定する
@@ -22,9 +28,10 @@ class DoubleRouletteModelAdapter(data: OrderedRealmCollection<DoubleRouletteMode
     // セルに使用するビューを保持するためのクラス
     // セル1行分のレイアウトを定義するクラス
     class ViewHolder(cell: View) : RecyclerView.ViewHolder(cell) {
-        val isInnerSwitch: Switch = cell.findViewById(R.id.isInnerSwitch)   // 内側かどうかを表すタイプのスイッチ？セグメントコントロール？
+        val isInnerSwitch: Switch = cell.findViewById(R.id.isInnerSwitch)   // 内側かどうかを表すタイプのスイッチ
         val itemNameText: TextView = cell.findViewById(R.id.itemNameText)   // ルーレット要素の名前のビュー
-        val colorButton: Button = cell.findViewById(R.id.colorButton)       // ルーレット要素の色のビュー
+        val colorButton: Button = cell.findViewById(R.id.colorButton)       // ルーレット要素の色のボタン
+        val deleteButton: Button = cell.findViewById(R.id.deleteButton)     // セルの削除ボタン
     }
 
     override fun onCreateViewHolder(
@@ -42,7 +49,11 @@ class DoubleRouletteModelAdapter(data: OrderedRealmCollection<DoubleRouletteMode
         val roulette: DoubleRouletteModel? = getItem(position)
         holder.isInnerSwitch.isChecked = roulette?.isInner == true
         holder.itemNameText.text = roulette?.itemName
-        holder.colorButton.text = roulette?.itemColor   // TODO: 背景色を変更する処理に置き換える
+        holder.colorButton.text = roulette?.itemColor // TODO: 背景色を変更する処理に置き換える
+        holder.deleteButton.setOnClickListener {
+            // 単体のセルを削除する処理
+            deleteListener?.invoke(roulette?.id)
+        }
     }
 
     // RecyclerView高速化のためのテクニック
