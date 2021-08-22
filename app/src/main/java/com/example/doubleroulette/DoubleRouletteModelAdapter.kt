@@ -3,6 +3,7 @@ package com.example.doubleroulette
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.Switch
 import android.widget.TextView
@@ -12,6 +13,12 @@ import io.realm.OrderedRealmCollection
 import io.realm.RealmRecyclerViewAdapter
 
 class DoubleRouletteModelAdapter(data: OrderedRealmCollection<DoubleRouletteModel>) : RealmRecyclerViewAdapter<DoubleRouletteModel, DoubleRouletteModelAdapter.ViewHolder>(data, true) {
+
+    // キーボードを非表示にする処理
+    private var hiddenKeyboardListener: (() -> Unit)? = null
+    fun setOnHideKeyboardListener(listener: () -> Unit) {
+        hiddenKeyboardListener = listener
+    }
 
     // スイッチの状態を保存する処理
     private var updateSwitchListener: ((Long?, Boolean) -> Unit)? = null
@@ -66,6 +73,11 @@ class DoubleRouletteModelAdapter(data: OrderedRealmCollection<DoubleRouletteMode
     // 1行分のViewHolderの詳細設定をする関数
     override fun onBindViewHolder(holder: DoubleRouletteModelAdapter.ViewHolder, position: Int) {
         val roulette: DoubleRouletteModel? = getItem(position)
+
+        holder.itemView.setOnClickListener {
+            hiddenKeyboardListener?.invoke()
+            holder.itemNameText.clearFocus() // TODO: これだけだと一個のセルにしかフォーカスアウト処理が乗らない
+        }
 
         holder.isInnerSwitch.isChecked = roulette?.isInner == true
         holder.isInnerSwitch.setOnCheckedChangeListener { _, isChecked ->

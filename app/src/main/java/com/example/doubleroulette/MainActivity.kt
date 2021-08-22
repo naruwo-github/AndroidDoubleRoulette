@@ -1,8 +1,11 @@
 package com.example.doubleroulette
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MotionEvent
+import android.view.inputmethod.InputMethodManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.doubleroulette.databinding.ActivityMainBinding
 import com.google.android.gms.ads.AdRequest
@@ -35,7 +38,12 @@ class MainActivity : AppCompatActivity() {
         realm.close()
     }
 
-    // 本Viewの初期化処理
+    // 「RecyclerView、各種ボタン、セル以外のView」をタップした際にキーボード非表示
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        hideKeyboard()
+        return false
+    }
+
     private fun initView() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
@@ -49,6 +57,11 @@ class MainActivity : AppCompatActivity() {
         val roulette = realm.where<DoubleRouletteModel>().findAll()
         val adapter = DoubleRouletteModelAdapter(roulette)
         binding.recyclerView.adapter = adapter
+
+        // RecyclerViewのセルに、タップ時にキーボードを非表示にする処理を追加
+        adapter.setOnHideKeyboardListener {
+            hideKeyboard()
+        }
 
         // 単一のセルのスイッチの状態を更新する処理を設定
         adapter.setOnUpdateSwitchListener { id, isChecked ->
@@ -137,6 +150,16 @@ class MainActivity : AppCompatActivity() {
         binding.toRouletteButton.setOnClickListener {
             val intent = Intent(this, RouletteActivity::class.java)
             startActivity(intent)
+        }
+    }
+
+    private fun hideKeyboard() {
+        currentFocus?.let {
+            (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
+                .hideSoftInputFromWindow(
+                    it.windowToken,
+                    InputMethodManager.HIDE_NOT_ALWAYS
+                )
         }
     }
 
