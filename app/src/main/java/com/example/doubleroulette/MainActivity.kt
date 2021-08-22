@@ -49,10 +49,27 @@ class MainActivity : AppCompatActivity() {
         val roulette = realm.where<DoubleRouletteModel>().findAll()
         val adapter = DoubleRouletteModelAdapter(roulette)
         binding.recyclerView.adapter = adapter
+
+        // 単一のセルのスイッチの状態を更新する処理を設定
+        adapter.setUpdateSwitchListener { id, isChecked ->
+            id?.let {
+                updateSwitchById(id, isChecked)
+            }
+        }
+
+        // 単一のセルを削除する処理を設定
         adapter.setDeleteListener { id ->
             id?.let {
                 deleteDataById(it)
             }
+        }
+
+    }
+
+    private fun updateSwitchById(id: Long, isChecked: Boolean) {
+        realm.executeTransaction { db: Realm ->
+            val roulette = db.where<DoubleRouletteModel>().equalTo("id", id).findFirst()
+            roulette?.isInner = isChecked
         }
     }
 
