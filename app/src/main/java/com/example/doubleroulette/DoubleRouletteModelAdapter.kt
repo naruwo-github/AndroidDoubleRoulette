@@ -76,7 +76,6 @@ class DoubleRouletteModelAdapter(data: OrderedRealmCollection<DoubleRouletteMode
 
         holder.itemView.setOnClickListener {
             hiddenKeyboardListener?.invoke()
-            holder.itemNameText.clearFocus() // TODO: これだけだと一個のセルにしかフォーカスアウト処理が乗らない
         }
 
         holder.isInnerSwitch.isChecked = roulette?.isInner == true

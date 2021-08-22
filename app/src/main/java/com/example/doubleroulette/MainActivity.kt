@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
+import androidx.core.view.allViews
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.doubleroulette.databinding.ActivityMainBinding
 import com.google.android.gms.ads.AdRequest
@@ -58,8 +59,9 @@ class MainActivity : AppCompatActivity() {
         val adapter = DoubleRouletteModelAdapter(roulette)
         binding.recyclerView.adapter = adapter
 
-        // RecyclerViewのセルに、タップ時にキーボードを非表示にする処理を追加
+        // RecyclerViewのセルをタップした時のイベントリスナー
         adapter.setOnHideKeyboardListener {
+            // キーボード非表示処理
             hideKeyboard()
         }
 
@@ -161,6 +163,8 @@ class MainActivity : AppCompatActivity() {
                     InputMethodManager.HIDE_NOT_ALWAYS
                 )
         }
+        // フォーカスアウト処理
+        binding.recyclerView.clearFocus()
     }
 
 }
