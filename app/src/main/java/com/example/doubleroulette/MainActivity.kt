@@ -51,11 +51,26 @@ class MainActivity : AppCompatActivity() {
         binding.recyclerView.adapter = adapter
 
         // 単一のセルのスイッチの状態を更新する処理を設定
-        adapter.setUpdateSwitchListener { id, isChecked ->
+        adapter.setOnUpdateSwitchListener { id, isChecked ->
             id?.let {
                 updateSwitchById(id, isChecked)
             }
         }
+
+        // 単一のセルのテキストの状態を更新する処理を設定
+        adapter.setOnUpdateTextListener { id, text ->
+            // TODO: ふたもじ入れるとアプリが落ちる
+            id?.let {
+                updateTextById(id, text)
+            }
+        }
+
+//        // 単一のセルのテキストの状態を更新する処理を設定
+//        adapter.setOnUpdateColorListener { id, color ->
+//            id?.let {
+//                updateColorById(id, color)
+//            }
+//        }
 
         // 単一のセルを削除する処理を設定
         adapter.setDeleteListener { id ->
@@ -73,10 +88,23 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun deleteDataById(id: Long) {
+    private fun updateTextById(id: Long, text: String) {
         realm.executeTransaction { db: Realm ->
             val roulette = db.where<DoubleRouletteModel>().equalTo("id", id).findFirst()
-            roulette?.deleteFromRealm()
+            roulette?.itemName = text
+        }
+    }
+
+    private fun updateColorById(id: Long, color: String) {
+        realm.executeTransaction { db: Realm ->
+            val roulette = db.where<DoubleRouletteModel>().equalTo("id", id).findFirst()
+            roulette?.itemColor = color
+        }
+    }
+
+    private fun deleteDataById(id: Long) {
+        realm.executeTransaction { db: Realm ->
+            db.where<DoubleRouletteModel>().equalTo("id", id).findFirst()?.deleteFromRealm()
         }
     }
 
@@ -100,7 +128,7 @@ class MainActivity : AppCompatActivity() {
     private fun setupClearButton() {
         binding.clearButton.setOnClickListener {
             realm.executeTransaction { db: Realm ->
-                db.deleteAll()
+                db.where<DoubleRouletteModel>().findAll().deleteAllFromRealm()
             }
         }
     }

@@ -15,8 +15,20 @@ class DoubleRouletteModelAdapter(data: OrderedRealmCollection<DoubleRouletteMode
 
     // スイッチの状態を保存する処理
     private var updateSwitchListener: ((Long?, Boolean) -> Unit)? = null
-    fun setUpdateSwitchListener(listener: (Long?, Boolean) -> Unit) {
+    fun setOnUpdateSwitchListener(listener: (Long?, Boolean) -> Unit) {
         updateSwitchListener = listener
+    }
+
+    // テキストの状態を保存する処理
+    private var updateTextListener: ((Long?, String) -> Unit)? = null
+    fun setOnUpdateTextListener(listener: (Long?, String) -> Unit) {
+        updateTextListener = listener
+    }
+
+    // 色の状態を保存する処理
+    private var updateColorListener: ((Long?, String) -> Unit)? = null
+    fun setOnUpdateColorListener(listener: (Long?, String) -> Unit) {
+        updateColorListener = listener
     }
 
     // セルの削除処理をする関数
@@ -56,20 +68,24 @@ class DoubleRouletteModelAdapter(data: OrderedRealmCollection<DoubleRouletteMode
         val roulette: DoubleRouletteModel? = getItem(position)
 
         holder.isInnerSwitch.isChecked = roulette?.isInner == true
-        holder.isInnerSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+        holder.isInnerSwitch.setOnCheckedChangeListener { _, isChecked ->
             // スイッチの状態を更新する処理を呼ぶ
             updateSwitchListener?.invoke(roulette?.id, isChecked)
         }
 
         holder.itemNameText.text = roulette?.itemName
         holder.itemNameText.addTextChangedListener {
-            // TODO: テキストが修正されたタイミングのイベント
+            it?.let {
+                // テキストを更新する処理を呼ぶ
+                updateTextListener?.invoke(roulette?.id, holder.itemNameText.text.toString())
+            }
         }
 
         holder.colorButton.text = roulette?.itemColor
         holder.colorButton.setOnClickListener {
             // TODO: ボタンがタップされたタイミングのイベント
-            // TODO: 背景色を変更する処理に置き換える（ピッカーを呼ぶ処理？）
+            // TODO: ピッカーを呼ぶ処理
+            // TODO: ピッカーで選択した色が返ってきたら、ボタン背景色の変更、updateColorListener関数の呼び出しをする
         }
 
         holder.deleteButton.setOnClickListener {
