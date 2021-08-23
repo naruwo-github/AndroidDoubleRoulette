@@ -67,6 +67,7 @@ class MainActivity : AppCompatActivity() {
 
         // 単一のセルのスイッチの状態を更新する処理を設定
         adapter.setOnUpdateSwitchListener { id, isChecked ->
+            // TODO: 【バグ修正】連続でスイッチ押すとアプリが落ちる
             id?.let {
                 updateSwitchById(id, isChecked)
             }
@@ -74,18 +75,18 @@ class MainActivity : AppCompatActivity() {
 
         // 単一のセルのテキストの状態を更新する処理を設定
         adapter.setOnUpdateTextListener { id, text ->
-            // TODO: ふたもじ入れるとアプリが落ちる
+            // TODO: 【バグ修正】ふたもじ入れるとアプリが落ちる
             id?.let {
                 updateTextById(id, text)
             }
         }
 
-//        // 単一のセルのテキストの状態を更新する処理を設定
-//        adapter.setOnUpdateColorListener { id, color ->
-//            id?.let {
-//                updateColorById(id, color)
-//            }
-//        }
+        // 単一のセルのカラーボタンを更新する処理を設定
+        adapter.setOnUpdateColorListener { id, color ->
+            id?.let {
+                updateColorById(id, color)
+            }
+        }
 
         // 単一のセルを削除する処理を設定
         adapter.setDeleteListener { id ->
@@ -110,6 +111,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // 16進数のカラーコード（hexString）を保存する処理
     private fun updateColorById(id: Long, color: String) {
         realm.executeTransaction { db: Realm ->
             val roulette = db.where<DoubleRouletteModel>().equalTo("id", id).findFirst()
