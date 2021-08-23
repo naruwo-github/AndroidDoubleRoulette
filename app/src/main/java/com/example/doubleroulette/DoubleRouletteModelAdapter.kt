@@ -1,12 +1,15 @@
 package com.example.doubleroulette
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.Switch
 import android.widget.TextView
+import androidx.core.graphics.blue
+import androidx.core.graphics.green
+import androidx.core.graphics.red
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.RecyclerView
 import io.realm.OrderedRealmCollection
@@ -97,6 +100,13 @@ class DoubleRouletteModelAdapter(data: OrderedRealmCollection<DoubleRouletteMode
             // TODO: ボタンがタップされたタイミングのイベント
             // TODO: ピッカーを呼ぶ処理
             // TODO: ピッカーで選択した色が返ってきたら、ボタン背景色の変更、updateColorListener関数の呼び出しをする
+            val selectedColor = Color.YELLOW
+            val r = selectedColor.red
+            val g = selectedColor.green
+            val b = selectedColor.blue
+            val hexColor: String = "#"
+            it.setBackgroundColor(selectedColor)
+            updateColorListener?.invoke(roulette?.id, hexColor)
         }
 
         holder.deleteButton.setOnClickListener {

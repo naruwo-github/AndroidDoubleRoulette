@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
-import androidx.core.view.allViews
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.doubleroulette.databinding.ActivityMainBinding
 import com.google.android.gms.ads.AdRequest
@@ -83,6 +82,7 @@ class MainActivity : AppCompatActivity() {
 
         // 単一のセルのカラーボタンを更新する処理を設定
         adapter.setOnUpdateColorListener { id, color ->
+            // TODO: 【バグ修正】連続で押すとアプリが落ちる
             id?.let {
                 updateColorById(id, color)
             }
