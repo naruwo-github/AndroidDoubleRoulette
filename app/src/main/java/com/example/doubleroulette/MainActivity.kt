@@ -81,10 +81,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         // 単一のセルのカラーボタンを更新する処理を設定
-        adapter.setOnUpdateColorListener { id, color ->
+        adapter.setOnUpdateColorListener { id, r, g, b ->
             // TODO: 【バグ修正】連続で押すとアプリが落ちる
             id?.let {
-                updateColorById(id, color)
+                updateColorById(id, r, g, b)
             }
         }
 
@@ -112,10 +112,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     // 16進数のカラーコード（hexString）を保存する処理
-    private fun updateColorById(id: Long, color: String) {
+    private fun updateColorById(id: Long, r: String, g: String, b: String) {
         realm.executeTransaction { db: Realm ->
             val roulette = db.where<DoubleRouletteModel>().equalTo("id", id).findFirst()
-            roulette?.itemColor = color
+            roulette?.itemColorR = r
+            roulette?.itemColorG = g
+            roulette?.itemColorB = b
         }
     }
 

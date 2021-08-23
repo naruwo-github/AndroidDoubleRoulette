@@ -36,8 +36,8 @@ class DoubleRouletteModelAdapter(data: OrderedRealmCollection<DoubleRouletteMode
     }
 
     // 色の状態を保存する処理
-    private var updateColorListener: ((Long?, String) -> Unit)? = null
-    fun setOnUpdateColorListener(listener: (Long?, String) -> Unit) {
+    private var updateColorListener: ((Long?, String, String, String) -> Unit)? = null
+    fun setOnUpdateColorListener(listener: (Long?, String, String, String) -> Unit) {
         updateColorListener = listener
     }
 
@@ -95,18 +95,20 @@ class DoubleRouletteModelAdapter(data: OrderedRealmCollection<DoubleRouletteMode
             }
         }
 
-        holder.colorButton.text = roulette?.itemColor
+        val buttonText = "#" + roulette?.itemColorR + roulette?.itemColorG + roulette?.itemColorB
+        holder.colorButton.text = buttonText
         holder.colorButton.setOnClickListener {
-            // TODO: ボタンがタップされたタイミングのイベント
-            // TODO: ピッカーを呼ぶ処理
-            // TODO: ピッカーで選択した色が返ってきたら、ボタン背景色の変更、updateColorListener関数の呼び出しをする
+            // TODO: ピッカーを呼ぶ処理＆色を取得
             val selectedColor = Color.YELLOW
-            val r = selectedColor.red
-            val g = selectedColor.green
-            val b = selectedColor.blue
-            val hexColor: String = "#"
-            it.setBackgroundColor(selectedColor)
-            updateColorListener?.invoke(roulette?.id, hexColor)
+            var r = Integer.toHexString(selectedColor.red)
+            if (r == "0") r = "00"
+            var g = Integer.toHexString(selectedColor.green)
+            if (g == "0") g = "00"
+            var b = Integer.toHexString(selectedColor.blue)
+            if (b == "0") b = "00"
+            val hexColor = "#$r$g$b"
+            it.setBackgroundColor(Color.parseColor(hexColor))
+            updateColorListener?.invoke(roulette?.id, r, g, b)
         }
 
         holder.deleteButton.setOnClickListener {
