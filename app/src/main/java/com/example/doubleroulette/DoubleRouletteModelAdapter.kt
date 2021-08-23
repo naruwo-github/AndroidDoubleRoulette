@@ -24,26 +24,26 @@ class DoubleRouletteModelAdapter(data: OrderedRealmCollection<DoubleRouletteMode
     }
 
     // スイッチの状態を保存する処理
-    private var updateSwitchListener: ((Long?, Boolean) -> Unit)? = null
-    fun setOnUpdateSwitchListener(listener: (Long?, Boolean) -> Unit) {
+    private var updateSwitchListener: ((Long, Boolean) -> Unit)? = null
+    fun setOnUpdateSwitchListener(listener: (Long, Boolean) -> Unit) {
         updateSwitchListener = listener
     }
 
     // テキストの状態を保存する処理
-    private var updateTextListener: ((Long?, String) -> Unit)? = null
-    fun setOnUpdateTextListener(listener: (Long?, String) -> Unit) {
+    private var updateTextListener: ((Long, String) -> Unit)? = null
+    fun setOnUpdateTextListener(listener: (Long, String) -> Unit) {
         updateTextListener = listener
     }
 
     // 色の状態を保存する処理
-    private var updateColorListener: ((Long?, String, String, String) -> Unit)? = null
-    fun setOnUpdateColorListener(listener: (Long?, String, String, String) -> Unit) {
+    private var updateColorListener: ((Long, String, String, String) -> Unit)? = null
+    fun setOnUpdateColorListener(listener: (Long, String, String, String) -> Unit) {
         updateColorListener = listener
     }
 
     // セルの削除処理をする関数
-    private var deleteListener: ((Long?) -> Unit)? = null
-    fun setDeleteListener(listener: (Long?) -> Unit) {
+    private var deleteListener: ((Long) -> Unit)? = null
+    fun setDeleteListener(listener: (Long) -> Unit) {
         deleteListener = listener
     }
 
@@ -75,27 +75,27 @@ class DoubleRouletteModelAdapter(data: OrderedRealmCollection<DoubleRouletteMode
 
     // 1行分のViewHolderの詳細設定をする関数
     override fun onBindViewHolder(holder: DoubleRouletteModelAdapter.ViewHolder, position: Int) {
-        val roulette: DoubleRouletteModel? = getItem(position)
+        val roulette: DoubleRouletteModel = getItem(position) ?: return
 
         holder.itemView.setOnClickListener {
             hiddenKeyboardListener?.invoke()
         }
 
-        holder.isInnerSwitch.isChecked = roulette?.isInner == true
+        holder.isInnerSwitch.isChecked = roulette.isInner == true
         holder.isInnerSwitch.setOnCheckedChangeListener { _, isChecked ->
             // スイッチの状態を更新する処理を呼ぶ
-            updateSwitchListener?.invoke(roulette?.id, isChecked)
+            updateSwitchListener?.invoke(roulette.id, isChecked)
         }
 
-        holder.itemNameText.text = roulette?.itemName
+        holder.itemNameText.text = roulette.itemName
         holder.itemNameText.addTextChangedListener {
             it?.let {
                 // テキストを更新する処理を呼ぶ
-                updateTextListener?.invoke(roulette?.id, holder.itemNameText.text.toString())
+                updateTextListener?.invoke(roulette.id, holder.itemNameText.text.toString())
             }
         }
 
-        val hexColorText = "#" + roulette?.itemColorR + roulette?.itemColorG + roulette?.itemColorB
+        val hexColorText = "#" + roulette.itemColorR + roulette.itemColorG + roulette.itemColorB
         holder.colorButton.text = hexColorText
         holder.colorButton.setBackgroundColor(Color.parseColor(hexColorText))
         holder.colorButton.setOnClickListener {
@@ -110,12 +110,12 @@ class DoubleRouletteModelAdapter(data: OrderedRealmCollection<DoubleRouletteMode
             if (b == "0") b = "00"
             val hexColor = "#$r$g$b"
             it.setBackgroundColor(Color.parseColor(hexColor))
-            updateColorListener?.invoke(roulette?.id, r, g, b)
+            updateColorListener?.invoke(roulette.id, r, g, b)
         }
 
         holder.deleteButton.setOnClickListener {
             // 単体のセルを削除する処理を呼ぶ
-            deleteListener?.invoke(roulette?.id)
+            deleteListener?.invoke(roulette.id)
         }
 
     }
@@ -123,6 +123,10 @@ class DoubleRouletteModelAdapter(data: OrderedRealmCollection<DoubleRouletteMode
     // RecyclerView高速化のためのテクニック
     override fun getItemId(position: Int): Long {
         return getItem(position)?.id ?: 0
+    }
+
+    override fun getItemCount(): Int {
+        return data?.count() ?: 0
     }
 
 }

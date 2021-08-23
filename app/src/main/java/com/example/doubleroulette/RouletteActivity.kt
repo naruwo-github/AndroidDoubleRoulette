@@ -24,7 +24,12 @@ class RouletteActivity : AppCompatActivity() {
         setupAd()
         setupBackButton()
         setupStartButton()
-//        setupRoulette()
+        setupRoulette()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        realm.close()
     }
 
     // 本Viewの初期化処理

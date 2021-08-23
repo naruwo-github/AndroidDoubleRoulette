@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
+import androidx.core.view.allViews
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.doubleroulette.databinding.ActivityMainBinding
 import com.google.android.gms.ads.AdRequest
@@ -67,32 +68,24 @@ class MainActivity : AppCompatActivity() {
         // 単一のセルのスイッチの状態を更新する処理を設定
         adapter.setOnUpdateSwitchListener { id, isChecked ->
             // TODO: 【バグ修正】連続でスイッチ押すとアプリが落ちる
-            id?.let {
-                updateSwitchById(id, isChecked)
-            }
+            updateSwitchById(id, isChecked)
         }
 
         // 単一のセルのテキストの状態を更新する処理を設定
         adapter.setOnUpdateTextListener { id, text ->
             // TODO: 【バグ修正】ふたもじ入れるとアプリが落ちる
-            id?.let {
-                updateTextById(id, text)
-            }
+            updateTextById(id, text)
         }
 
         // 単一のセルのカラーボタンを更新する処理を設定
         adapter.setOnUpdateColorListener { id, r, g, b ->
             // TODO: 【バグ修正】連続で押すとアプリが落ちる
-            id?.let {
-                updateColorById(id, r, g, b)
-            }
+            updateColorById(id, r, g, b)
         }
 
         // 単一のセルを削除する処理を設定
         adapter.setDeleteListener { id ->
-            id?.let {
-                deleteDataById(it)
-            }
+            deleteDataById(id)
         }
 
     }
@@ -168,7 +161,9 @@ class MainActivity : AppCompatActivity() {
                 )
         }
         // フォーカスアウト処理
-        binding.recyclerView.clearFocus()
+        binding.recyclerView.allViews.forEach {
+            it.clearFocus()
+        }
     }
 
 }
