@@ -24,26 +24,26 @@ class DoubleRouletteModelAdapter(data: OrderedRealmCollection<DoubleRouletteMode
     }
 
     // スイッチの状態を保存する処理
-    private var updateSwitchListener: ((Long?, Boolean) -> Unit)? = null
-    fun setOnUpdateSwitchListener(listener: (Long?, Boolean) -> Unit) {
+    private var updateSwitchListener: ((Long, Boolean) -> Unit)? = null
+    fun setOnUpdateSwitchListener(listener: (Long, Boolean) -> Unit) {
         updateSwitchListener = listener
     }
 
     // テキストの状態を保存する処理
-    private var updateTextListener: ((Long?, String) -> Unit)? = null
-    fun setOnUpdateTextListener(listener: (Long?, String) -> Unit) {
+    private var updateTextListener: ((Long, String) -> Unit)? = null
+    fun setOnUpdateTextListener(listener: (Long, String) -> Unit) {
         updateTextListener = listener
     }
 
     // 色の状態を保存する処理
-    private var updateColorListener: ((Long?, String) -> Unit)? = null
-    fun setOnUpdateColorListener(listener: (Long?, String) -> Unit) {
+    private var updateColorListener: ((Long, String, String, String) -> Unit)? = null
+    fun setOnUpdateColorListener(listener: (Long, String, String, String) -> Unit) {
         updateColorListener = listener
     }
 
     // セルの削除処理をする関数
-    private var deleteListener: ((Long?) -> Unit)? = null
-    fun setDeleteListener(listener: (Long?) -> Unit) {
+    private var deleteListener: ((Long) -> Unit)? = null
+    fun setDeleteListener(listener: (Long) -> Unit) {
         deleteListener = listener
     }
 
@@ -68,50 +68,64 @@ class DoubleRouletteModelAdapter(data: OrderedRealmCollection<DoubleRouletteMode
         viewType: Int
     ): DoubleRouletteModelAdapter.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        // inflateメソッドより、XMLファイルから画面を生成している
         val view = inflater.inflate(R.layout.roulette_cell, parent, false)
         return ViewHolder(view)
     }
 
     // 1行分のViewHolderの詳細設定をする関数
     override fun onBindViewHolder(holder: DoubleRouletteModelAdapter.ViewHolder, position: Int) {
-        val roulette: DoubleRouletteModel? = getItem(position)
+        // 循環呼び出しを防ぐためのリスナ初期化
+        holder.itemView.setOnClickListener(null)
+        holder.isInnerSwitch.setOnCheckedChangeListener(null)
+//        holder.itemNameText.addTextChangedListener(null)
+        holder.colorButton.setOnClickListener(null)
+        holder.deleteButton.setOnClickListener(null)
+
+        // データの取得：データがない場合はアーリーリターン
+        val roulette: DoubleRouletteModel = getItem(position) ?: return
+
+        holder.isInnerSwitch.isChecked = roulette.isInner == true
+        holder.itemNameText.text = roulette.itemName
+        val hexColorText = "#" + roulette.itemColorR + roulette.itemColorG + roulette.itemColorB
+        holder.colorButton.text = hexColorText
+        holder.colorButton.setBackgroundColor(Color.parseColor(hexColorText))
 
         holder.itemView.setOnClickListener {
             hiddenKeyboardListener?.invoke()
         }
 
-        holder.isInnerSwitch.isChecked = roulette?.isInner == true
         holder.isInnerSwitch.setOnCheckedChangeListener { _, isChecked ->
             // スイッチの状態を更新する処理を呼ぶ
-            updateSwitchListener?.invoke(roulette?.id, isChecked)
+            updateSwitchListener?.invoke(roulette.id, isChecked)
         }
 
-        holder.itemNameText.text = roulette?.itemName
         holder.itemNameText.addTextChangedListener {
-            it?.let {
-                // テキストを更新する処理を呼ぶ
-                updateTextListener?.invoke(roulette?.id, holder.itemNameText.text.toString())
-            }
+            // TODO: 他の方法でテキストを更新する方法を模索中（編集画面を一度挟むべきかもしれない）
+            // これを追加すると循環呼び出しによりアプリが落ちるようになる、、、
+//            it?.let {
+//                // テキストを更新する処理を呼ぶ
+//                updateTextListener?.invoke(roulette.id, holder.itemNameText.text.toString())
+//            }
         }
 
-        holder.colorButton.text = roulette?.itemColor
         holder.colorButton.setOnClickListener {
-            // TODO: ボタンがタップされたタイミングのイベント
-            // TODO: ピッカーを呼ぶ処理
-            // TODO: ピッカーで選択した色が返ってきたら、ボタン背景色の変更、updateColorListener関数の呼び出しをする
+            // TODO: ピッカーを呼ぶ処理＆色を取得
+            // TODO: 色を取得する処理のなかで、その色をselectedColorに格納する
             val selectedColor = Color.YELLOW
-            val r = selectedColor.red
-            val g = selectedColor.green
-            val b = selectedColor.blue
-            val hexColor: String = "#"
-            it.setBackgroundColor(selectedColor)
-            updateColorListener?.invoke(roulette?.id, hexColor)
+            var r = Integer.toHexString(selectedColor.red)
+            if (r == "0") r = "00"
+            var g = Integer.toHexString(selectedColor.green)
+            if (g == "0") g = "00"
+            var b = Integer.toHexString(selectedColor.blue)
+            if (b == "0") b = "00"
+            val hexColor = "#$r$g$b"
+            it.setBackgroundColor(Color.parseColor(hexColor))
+            updateColorListener?.invoke(roulette.id, r, g, b)
         }
 
         holder.deleteButton.setOnClickListener {
             // 単体のセルを削除する処理を呼ぶ
-            deleteListener?.invoke(roulette?.id)
+            deleteListener?.invoke(roulette.id)
         }
 
     }
@@ -119,6 +133,10 @@ class DoubleRouletteModelAdapter(data: OrderedRealmCollection<DoubleRouletteMode
     // RecyclerView高速化のためのテクニック
     override fun getItemId(position: Int): Long {
         return getItem(position)?.id ?: 0
+    }
+
+    override fun getItemCount(): Int {
+        return data?.count() ?: 0
     }
 
 }
