@@ -1,16 +1,45 @@
 package com.example.doubleroulette
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Switch
 import android.widget.TextView
+import androidx.core.graphics.blue
+import androidx.core.graphics.green
+import androidx.core.graphics.red
+import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.RecyclerView
 import io.realm.OrderedRealmCollection
 import io.realm.RealmRecyclerViewAdapter
 
 class DoubleRouletteModelAdapter(data: OrderedRealmCollection<DoubleRouletteModel>) : RealmRecyclerViewAdapter<DoubleRouletteModel, DoubleRouletteModelAdapter.ViewHolder>(data, true) {
+
+    // キーボードを非表示にする処理
+    private var hiddenKeyboardListener: (() -> Unit)? = null
+    fun setOnHideKeyboardListener(listener: () -> Unit) {
+        hiddenKeyboardListener = listener
+    }
+
+    // スイッチの状態を保存する処理
+    private var updateSwitchListener: ((Long?, Boolean) -> Unit)? = null
+    fun setOnUpdateSwitchListener(listener: (Long?, Boolean) -> Unit) {
+        updateSwitchListener = listener
+    }
+
+    // テキストの状態を保存する処理
+    private var updateTextListener: ((Long?, String) -> Unit)? = null
+    fun setOnUpdateTextListener(listener: (Long?, String) -> Unit) {
+        updateTextListener = listener
+    }
+
+    // 色の状態を保存する処理
+    private var updateColorListener: ((Long?, String) -> Unit)? = null
+    fun setOnUpdateColorListener(listener: (Long?, String) -> Unit) {
+        updateColorListener = listener
+    }
 
     // セルの削除処理をする関数
     private var deleteListener: ((Long?) -> Unit)? = null
@@ -47,13 +76,44 @@ class DoubleRouletteModelAdapter(data: OrderedRealmCollection<DoubleRouletteMode
     // 1行分のViewHolderの詳細設定をする関数
     override fun onBindViewHolder(holder: DoubleRouletteModelAdapter.ViewHolder, position: Int) {
         val roulette: DoubleRouletteModel? = getItem(position)
+
+        holder.itemView.setOnClickListener {
+            hiddenKeyboardListener?.invoke()
+        }
+
         holder.isInnerSwitch.isChecked = roulette?.isInner == true
+        holder.isInnerSwitch.setOnCheckedChangeListener { _, isChecked ->
+            // スイッチの状態を更新する処理を呼ぶ
+            updateSwitchListener?.invoke(roulette?.id, isChecked)
+        }
+
         holder.itemNameText.text = roulette?.itemName
-        holder.colorButton.text = roulette?.itemColor // TODO: 背景色を変更する処理に置き換える
+        holder.itemNameText.addTextChangedListener {
+            it?.let {
+                // テキストを更新する処理を呼ぶ
+                updateTextListener?.invoke(roulette?.id, holder.itemNameText.text.toString())
+            }
+        }
+
+        holder.colorButton.text = roulette?.itemColor
+        holder.colorButton.setOnClickListener {
+            // TODO: ボタンがタップされたタイミングのイベント
+            // TODO: ピッカーを呼ぶ処理
+            // TODO: ピッカーで選択した色が返ってきたら、ボタン背景色の変更、updateColorListener関数の呼び出しをする
+            val selectedColor = Color.YELLOW
+            val r = selectedColor.red
+            val g = selectedColor.green
+            val b = selectedColor.blue
+            val hexColor: String = "#"
+            it.setBackgroundColor(selectedColor)
+            updateColorListener?.invoke(roulette?.id, hexColor)
+        }
+
         holder.deleteButton.setOnClickListener {
-            // 単体のセルを削除する処理
+            // 単体のセルを削除する処理を呼ぶ
             deleteListener?.invoke(roulette?.id)
         }
+
     }
 
     // RecyclerView高速化のためのテクニック

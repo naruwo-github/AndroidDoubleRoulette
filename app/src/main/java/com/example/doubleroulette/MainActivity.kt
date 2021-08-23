@@ -1,8 +1,11 @@
 package com.example.doubleroulette
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MotionEvent
+import android.view.inputmethod.InputMethodManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.doubleroulette.databinding.ActivityMainBinding
 import com.google.android.gms.ads.AdRequest
@@ -35,7 +38,12 @@ class MainActivity : AppCompatActivity() {
         realm.close()
     }
 
-    // 本Viewの初期化処理
+    // 「RecyclerView、各種ボタン、セル以外のView」をタップした際にキーボード非表示
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        hideKeyboard()
+        return false
+    }
+
     private fun initView() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
@@ -49,17 +57,71 @@ class MainActivity : AppCompatActivity() {
         val roulette = realm.where<DoubleRouletteModel>().findAll()
         val adapter = DoubleRouletteModelAdapter(roulette)
         binding.recyclerView.adapter = adapter
+
+        // RecyclerViewのセルをタップした時のイベントリスナー
+        adapter.setOnHideKeyboardListener {
+            // キーボード非表示処理
+            hideKeyboard()
+        }
+
+        // 単一のセルのスイッチの状態を更新する処理を設定
+        adapter.setOnUpdateSwitchListener { id, isChecked ->
+            // TODO: 【バグ修正】連続でスイッチ押すとアプリが落ちる
+            id?.let {
+                updateSwitchById(id, isChecked)
+            }
+        }
+
+        // 単一のセルのテキストの状態を更新する処理を設定
+        adapter.setOnUpdateTextListener { id, text ->
+            // TODO: 【バグ修正】ふたもじ入れるとアプリが落ちる
+            id?.let {
+                updateTextById(id, text)
+            }
+        }
+
+        // 単一のセルのカラーボタンを更新する処理を設定
+        adapter.setOnUpdateColorListener { id, color ->
+            // TODO: 【バグ修正】連続で押すとアプリが落ちる
+            id?.let {
+                updateColorById(id, color)
+            }
+        }
+
+        // 単一のセルを削除する処理を設定
         adapter.setDeleteListener { id ->
             id?.let {
                 deleteDataById(it)
             }
         }
+
+    }
+
+    private fun updateSwitchById(id: Long, isChecked: Boolean) {
+        realm.executeTransaction { db: Realm ->
+            val roulette = db.where<DoubleRouletteModel>().equalTo("id", id).findFirst()
+            roulette?.isInner = isChecked
+        }
+    }
+
+    private fun updateTextById(id: Long, text: String) {
+        realm.executeTransaction { db: Realm ->
+            val roulette = db.where<DoubleRouletteModel>().equalTo("id", id).findFirst()
+            roulette?.itemName = text
+        }
+    }
+
+    // 16進数のカラーコード（hexString）を保存する処理
+    private fun updateColorById(id: Long, color: String) {
+        realm.executeTransaction { db: Realm ->
+            val roulette = db.where<DoubleRouletteModel>().equalTo("id", id).findFirst()
+            roulette?.itemColor = color
+        }
     }
 
     private fun deleteDataById(id: Long) {
         realm.executeTransaction { db: Realm ->
-            val roulette = db.where<DoubleRouletteModel>().equalTo("id", id).findFirst()
-            roulette?.deleteFromRealm()
+            db.where<DoubleRouletteModel>().equalTo("id", id).findFirst()?.deleteFromRealm()
         }
     }
 
@@ -83,7 +145,7 @@ class MainActivity : AppCompatActivity() {
     private fun setupClearButton() {
         binding.clearButton.setOnClickListener {
             realm.executeTransaction { db: Realm ->
-                db.deleteAll()
+                db.where<DoubleRouletteModel>().findAll().deleteAllFromRealm()
             }
         }
     }
@@ -93,6 +155,18 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, RouletteActivity::class.java)
             startActivity(intent)
         }
+    }
+
+    private fun hideKeyboard() {
+        currentFocus?.let {
+            (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
+                .hideSoftInputFromWindow(
+                    it.windowToken,
+                    InputMethodManager.HIDE_NOT_ALWAYS
+                )
+        }
+        // フォーカスアウト処理
+        binding.recyclerView.clearFocus()
     }
 
 }
