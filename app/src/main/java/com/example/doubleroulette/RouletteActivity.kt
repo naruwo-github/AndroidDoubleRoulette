@@ -3,6 +3,7 @@ package com.example.doubleroulette
 import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import com.example.doubleroulette.databinding.ActivityRouletteBinding
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
@@ -63,8 +64,14 @@ class RouletteActivity : AppCompatActivity() {
     private fun setupRoulette() {
         // ルーレットデータを取得
         val roulette = realm.where<DoubleRouletteModel>().findAll()
+        // 一応正しく取得できるか確認するためにログ出力
+        roulette.forEach {
+            Log.i("Cell ID : ", it.id.toString())
+            Log.i("Cell Title : ", it.itemName)
+        }
 
         // TODO: ルーレットの描画処理を行う
+        // TODO: データを整形して描画関数を呼ぶ
 //        drawRoulette(outerItem, innerItem, outerColor, innerColor)
     }
 

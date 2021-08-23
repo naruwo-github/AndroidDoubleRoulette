@@ -75,29 +75,41 @@ class DoubleRouletteModelAdapter(data: OrderedRealmCollection<DoubleRouletteMode
 
     // 1行分のViewHolderの詳細設定をする関数
     override fun onBindViewHolder(holder: DoubleRouletteModelAdapter.ViewHolder, position: Int) {
+        // TODO: これいらないかもしれない
+        // リスナの初期化
+        holder.itemView.setOnClickListener(null)
+        holder.isInnerSwitch.setOnCheckedChangeListener(null)
+        holder.itemNameText.addTextChangedListener { }
+        holder.colorButton.setOnClickListener(null)
+        holder.deleteButton.setOnClickListener(null)
+
+        // データの取得：データがない場合はアーリーリターン
         val roulette: DoubleRouletteModel = getItem(position) ?: return
+
+        holder.isInnerSwitch.isChecked = roulette.isInner == true
+        holder.itemNameText.text = roulette.itemName
+        val hexColorText = "#" + roulette.itemColorR + roulette.itemColorG + roulette.itemColorB
+        holder.colorButton.text = hexColorText
+        holder.colorButton.setBackgroundColor(Color.parseColor(hexColorText))
+
+        // イベント追加
 
         holder.itemView.setOnClickListener {
             hiddenKeyboardListener?.invoke()
         }
 
-        holder.isInnerSwitch.isChecked = roulette.isInner == true
         holder.isInnerSwitch.setOnCheckedChangeListener { _, isChecked ->
             // スイッチの状態を更新する処理を呼ぶ
             updateSwitchListener?.invoke(roulette.id, isChecked)
         }
 
-        holder.itemNameText.text = roulette.itemName
         holder.itemNameText.addTextChangedListener {
-            it?.let {
-                // テキストを更新する処理を呼ぶ
-                updateTextListener?.invoke(roulette.id, holder.itemNameText.text.toString())
-            }
+//            it?.let {
+//                // テキストを更新する処理を呼ぶ
+//                updateTextListener?.invoke(roulette.id, holder.itemNameText.text.toString())
+//            }
         }
 
-        val hexColorText = "#" + roulette.itemColorR + roulette.itemColorG + roulette.itemColorB
-        holder.colorButton.text = hexColorText
-        holder.colorButton.setBackgroundColor(Color.parseColor(hexColorText))
         holder.colorButton.setOnClickListener {
             // TODO: ピッカーを呼ぶ処理＆色を取得
             // TODO: 色を取得する処理のなかで、その色をselectedColorに格納する
