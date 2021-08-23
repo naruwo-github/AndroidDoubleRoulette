@@ -68,18 +68,16 @@ class DoubleRouletteModelAdapter(data: OrderedRealmCollection<DoubleRouletteMode
         viewType: Int
     ): DoubleRouletteModelAdapter.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        // inflateメソッドより、XMLファイルから画面を生成している
         val view = inflater.inflate(R.layout.roulette_cell, parent, false)
         return ViewHolder(view)
     }
 
     // 1行分のViewHolderの詳細設定をする関数
     override fun onBindViewHolder(holder: DoubleRouletteModelAdapter.ViewHolder, position: Int) {
-        // TODO: これいらないかもしれない
-        // リスナの初期化
+        // 循環呼び出しを防ぐためのリスナ初期化
         holder.itemView.setOnClickListener(null)
         holder.isInnerSwitch.setOnCheckedChangeListener(null)
-        holder.itemNameText.addTextChangedListener { }
+//        holder.itemNameText.addTextChangedListener(null)
         holder.colorButton.setOnClickListener(null)
         holder.deleteButton.setOnClickListener(null)
 
@@ -92,8 +90,6 @@ class DoubleRouletteModelAdapter(data: OrderedRealmCollection<DoubleRouletteMode
         holder.colorButton.text = hexColorText
         holder.colorButton.setBackgroundColor(Color.parseColor(hexColorText))
 
-        // イベント追加
-
         holder.itemView.setOnClickListener {
             hiddenKeyboardListener?.invoke()
         }
@@ -104,6 +100,8 @@ class DoubleRouletteModelAdapter(data: OrderedRealmCollection<DoubleRouletteMode
         }
 
         holder.itemNameText.addTextChangedListener {
+            // TODO: 他の方法でテキストを更新する方法を模索中（編集画面を一度挟むべきかもしれない）
+            // これを追加すると循環呼び出しによりアプリが落ちるようになる、、、
 //            it?.let {
 //                // テキストを更新する処理を呼ぶ
 //                updateTextListener?.invoke(roulette.id, holder.itemNameText.text.toString())
