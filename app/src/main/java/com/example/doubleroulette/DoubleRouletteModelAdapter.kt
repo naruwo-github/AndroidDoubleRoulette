@@ -95,10 +95,12 @@ class DoubleRouletteModelAdapter(data: OrderedRealmCollection<DoubleRouletteMode
             }
         }
 
-        val buttonText = "#" + roulette?.itemColorR + roulette?.itemColorG + roulette?.itemColorB
-        holder.colorButton.text = buttonText
+        val hexColorText = "#" + roulette?.itemColorR + roulette?.itemColorG + roulette?.itemColorB
+        holder.colorButton.text = hexColorText
+        holder.colorButton.setBackgroundColor(Color.parseColor(hexColorText))
         holder.colorButton.setOnClickListener {
             // TODO: ピッカーを呼ぶ処理＆色を取得
+            // TODO: 色を取得する処理のなかで、その色をselectedColorに格納する
             val selectedColor = Color.YELLOW
             var r = Integer.toHexString(selectedColor.red)
             if (r == "0") r = "00"
