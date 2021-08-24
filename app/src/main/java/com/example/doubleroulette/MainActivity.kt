@@ -2,10 +2,14 @@ package com.example.doubleroulette
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
+import androidx.core.graphics.blue
+import androidx.core.graphics.green
+import androidx.core.graphics.red
 import androidx.core.view.allViews
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.doubleroulette.databinding.ActivityMainBinding
@@ -15,6 +19,8 @@ import com.google.android.gms.ads.MobileAds
 import io.realm.Realm
 import io.realm.kotlin.createObject
 import io.realm.kotlin.where
+import vadiole.colorpicker.ColorModel
+import vadiole.colorpicker.ColorPickerDialog
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -61,7 +67,6 @@ class MainActivity : AppCompatActivity() {
 
         // RecyclerViewのセルをタップした時のイベントリスナー
         adapter.setOnHideKeyboardListener {
-            // キーボード非表示処理
             hideKeyboard()
         }
 
@@ -77,10 +82,17 @@ class MainActivity : AppCompatActivity() {
             updateTextById(id, text)
         }
 
-        // 単一のセルのカラーボタンを更新する処理を設定
-        adapter.setOnUpdateColorListener { id, r, g, b ->
-            // TODO: 【バグ修正】連続で押すとアプリが落ちる
-            updateColorById(id, r, g, b)
+        // カラーピッカーを開く処理を設定
+        adapter.setOnOpenColorPickerListener { id: Long ->
+            openColorPicker { color: Int ->
+                var r = Integer.toHexString(color.red)
+                if (r == "0") r = "00"
+                var g = Integer.toHexString(color.green)
+                if (g == "0") g = "00"
+                var b = Integer.toHexString(color.blue)
+                if (b == "0") b = "00"
+                updateColorById(id, r, g, b)
+            }
         }
 
         // 単一のセルを削除する処理を設定
@@ -164,6 +176,20 @@ class MainActivity : AppCompatActivity() {
         binding.recyclerView.allViews.forEach {
             it.clearFocus()
         }
+    }
+
+    private fun openColorPicker(callback: (Int) -> Unit) {
+        val colorPicker: ColorPickerDialog = ColorPickerDialog.Builder()
+            .setInitialColor(Color.RED)     //  set Color Model. ARGB, RGB or HSV
+            .setColorModel(ColorModel.HSV)  //  set is user be able to switch color model
+            .setColorModelSwitchEnabled(true)
+            .setButtonOkText(android.R.string.ok)
+            .setButtonCancelText(android.R.string.cancel)
+            .onColorSelected { color: Int ->
+                callback(color)
+            }
+            .create()
+        colorPicker.show(supportFragmentManager, "color_picker")
     }
 
 }

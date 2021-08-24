@@ -7,9 +7,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Switch
 import android.widget.TextView
-import androidx.core.graphics.blue
-import androidx.core.graphics.green
-import androidx.core.graphics.red
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.RecyclerView
 import io.realm.OrderedRealmCollection
@@ -35,10 +32,10 @@ class DoubleRouletteModelAdapter(data: OrderedRealmCollection<DoubleRouletteMode
         updateTextListener = listener
     }
 
-    // 色の状態を保存する処理
-    private var updateColorListener: ((Long, String, String, String) -> Unit)? = null
-    fun setOnUpdateColorListener(listener: (Long, String, String, String) -> Unit) {
-        updateColorListener = listener
+    // カラーピッカーを開く処理
+    private var openColorPickerListener: ((Long) -> Unit)? = null
+    fun setOnOpenColorPickerListener(listener: (Long) -> Unit) {
+        openColorPickerListener = listener
     }
 
     // セルの削除処理をする関数
@@ -109,18 +106,8 @@ class DoubleRouletteModelAdapter(data: OrderedRealmCollection<DoubleRouletteMode
         }
 
         holder.colorButton.setOnClickListener {
-            // TODO: ピッカーを呼ぶ処理＆色を取得
-            // TODO: 色を取得する処理のなかで、その色をselectedColorに格納する
-            val selectedColor = Color.YELLOW
-            var r = Integer.toHexString(selectedColor.red)
-            if (r == "0") r = "00"
-            var g = Integer.toHexString(selectedColor.green)
-            if (g == "0") g = "00"
-            var b = Integer.toHexString(selectedColor.blue)
-            if (b == "0") b = "00"
-            val hexColor = "#$r$g$b"
-            it.setBackgroundColor(Color.parseColor(hexColor))
-            updateColorListener?.invoke(roulette.id, r, g, b)
+            // カラーピッカーを表示させる処理を呼ぶ
+            openColorPickerListener?.invoke(roulette.id)
         }
 
         holder.deleteButton.setOnClickListener {

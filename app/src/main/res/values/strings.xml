@@ -8,4 +8,5 @@
     <string name="inner_switch">Inner</string>
     <string name="color_button">Color</string>
     <string name="item_name_text">Item</string>
+    <string name="recyclerview_description">recyclerview_description</string>
 </resources>
