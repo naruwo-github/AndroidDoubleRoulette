@@ -9,4 +9,6 @@
     <string name="color_button">Color</string>
     <string name="item_name_text">Item</string>
     <string name="recyclerview_description">recyclerview_description</string>
+    <string name="item_hint">item</string>
+    <string name="color_button_description">color_button</string>
 </resources>

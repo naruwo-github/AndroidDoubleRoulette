@@ -1,6 +1,7 @@
 package com.example.doubleroulette
 
 import android.graphics.Color
+import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,8 +28,8 @@ class DoubleRouletteModelAdapter(data: OrderedRealmCollection<DoubleRouletteMode
     }
 
     // テキストの状態を保存する処理
-    private var updateTextListener: ((Long, String) -> Unit)? = null
-    fun setOnUpdateTextListener(listener: (Long, String) -> Unit) {
+    private var updateTextListener: ((Long, CharSequence) -> Unit)? = null
+    fun setOnUpdateTextListener(listener: (Long, CharSequence) -> Unit) {
         updateTextListener = listener
     }
 
@@ -74,7 +75,7 @@ class DoubleRouletteModelAdapter(data: OrderedRealmCollection<DoubleRouletteMode
         // 循環呼び出しを防ぐためのリスナ初期化
         holder.itemView.setOnClickListener(null)
         holder.isInnerSwitch.setOnCheckedChangeListener(null)
-//        holder.itemNameText.addTextChangedListener(null)
+        holder.itemNameText.setOnClickListener(null)
         holder.colorButton.setOnClickListener(null)
         holder.deleteButton.setOnClickListener(null)
 
@@ -96,13 +97,9 @@ class DoubleRouletteModelAdapter(data: OrderedRealmCollection<DoubleRouletteMode
             updateSwitchListener?.invoke(roulette.id, isChecked)
         }
 
-        holder.itemNameText.addTextChangedListener {
-            // TODO: 他の方法でテキストを更新する方法を模索中（編集画面を一度挟むべきかもしれない）
-            // これを追加すると循環呼び出しによりアプリが落ちるようになる、、、
-//            it?.let {
-//                // テキストを更新する処理を呼ぶ
-//                updateTextListener?.invoke(roulette.id, holder.itemNameText.text.toString())
-//            }
+        holder.itemNameText.setOnClickListener {
+            // テキスト更新処理を呼ぶ
+            updateTextListener?.invoke(roulette.id, holder.itemNameText.text)
         }
 
         holder.colorButton.setOnClickListener {
