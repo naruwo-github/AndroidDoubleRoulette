@@ -1,12 +1,17 @@
 package com.example.doubleroulette
 
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.graphics.blue
 import androidx.core.graphics.green
 import androidx.core.graphics.red
@@ -72,14 +77,12 @@ class MainActivity : AppCompatActivity() {
 
         // 単一のセルのスイッチの状態を更新する処理を設定
         adapter.setOnUpdateSwitchListener { id, isChecked ->
-            // TODO: 【バグ修正】連続でスイッチ押すとアプリが落ちる
             updateSwitchById(id, isChecked)
         }
 
         // 単一のセルのテキストの状態を更新する処理を設定
         adapter.setOnUpdateTextListener { id, text ->
-            // TODO: 【バグ修正】ふたもじ入れるとアプリが落ちる
-            updateTextById(id, text)
+            openTextEditDialog(id, text)
         }
 
         // カラーピッカーを開く処理を設定
@@ -190,6 +193,19 @@ class MainActivity : AppCompatActivity() {
             }
             .create()
         colorPicker.show(supportFragmentManager, "color_picker")
+    }
+
+    private fun openTextEditDialog(id: Long, text: CharSequence) {
+        val textView = EditText(this)
+        textView.text = text as Editable?
+        AlertDialog.Builder(this)
+            .setView(textView)
+            .setPositiveButton("OK", DialogInterface.OnClickListener { _, _ ->
+                updateTextById(id, textView.text.toString())
+            })
+            .setNegativeButton("CANCEL", null)
+            .create()
+            .show()
     }
 
 }

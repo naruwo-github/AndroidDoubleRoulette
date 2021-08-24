@@ -29,6 +29,7 @@
         android:layout_marginBottom="5dp"
         android:autofillHints=""
         android:ems="10"
+        android:focusable="false"
         android:hint="@string/item_hint"
         android:inputType="textPersonName"
         android:textColorHint="#757575"
