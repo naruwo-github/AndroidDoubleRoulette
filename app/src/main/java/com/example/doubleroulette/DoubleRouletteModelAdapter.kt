@@ -35,6 +35,12 @@ class DoubleRouletteModelAdapter(data: OrderedRealmCollection<DoubleRouletteMode
         updateTextListener = listener
     }
 
+    // カラーピッカーを開く処理
+    private var openColorPickerListener: (() -> Unit)? = null
+    fun setOnOpenColorPickerListener(listener: () -> Unit) {
+        openColorPickerListener = listener
+    }
+
     // 色の状態を保存する処理
     private var updateColorListener: ((Long, String, String, String) -> Unit)? = null
     fun setOnUpdateColorListener(listener: (Long, String, String, String) -> Unit) {
@@ -111,6 +117,8 @@ class DoubleRouletteModelAdapter(data: OrderedRealmCollection<DoubleRouletteMode
         holder.colorButton.setOnClickListener {
             // TODO: ピッカーを呼ぶ処理＆色を取得
             // TODO: 色を取得する処理のなかで、その色をselectedColorに格納する
+            openColorPickerListener?.invoke()
+
             val selectedColor = Color.YELLOW
             var r = Integer.toHexString(selectedColor.red)
             if (r == "0") r = "00"

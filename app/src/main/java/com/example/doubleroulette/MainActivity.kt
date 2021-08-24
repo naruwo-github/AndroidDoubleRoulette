@@ -2,6 +2,7 @@ package com.example.doubleroulette
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MotionEvent
@@ -15,6 +16,8 @@ import com.google.android.gms.ads.MobileAds
 import io.realm.Realm
 import io.realm.kotlin.createObject
 import io.realm.kotlin.where
+import vadiole.colorpicker.ColorModel
+import vadiole.colorpicker.ColorPickerDialog
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -77,9 +80,15 @@ class MainActivity : AppCompatActivity() {
             updateTextById(id, text)
         }
 
+        // カラーピッカーを開く処理を設定
+        adapter.setOnOpenColorPickerListener {
+            openColorPicker {
+                // TODO: 戻り値の色（Int）を扱う処理を追記する
+            }
+        }
+
         // 単一のセルのカラーボタンを更新する処理を設定
         adapter.setOnUpdateColorListener { id, r, g, b ->
-            // TODO: 【バグ修正】連続で押すとアプリが落ちる
             updateColorById(id, r, g, b)
         }
 
@@ -164,6 +173,23 @@ class MainActivity : AppCompatActivity() {
         binding.recyclerView.allViews.forEach {
             it.clearFocus()
         }
+    }
+
+    private fun openColorPicker(callback: (Int) -> Unit) {
+        val colorPicker: ColorPickerDialog = ColorPickerDialog.Builder()
+            .setInitialColor(Color.RED)
+            //  set Color Model. ARGB, RGB or HSV
+            .setColorModel(ColorModel.HSV)
+            //  set is user be able to switch color model
+            .setColorModelSwitchEnabled(true)
+            .setButtonOkText(android.R.string.ok)
+            .setButtonCancelText(android.R.string.cancel)
+            .onColorSelected { color: Int ->
+                // 取得した色colorに対して処理を行う
+                callback(color)
+            }
+            .create()
+        colorPicker.show(supportFragmentManager, "color_picker")
     }
 
 }
