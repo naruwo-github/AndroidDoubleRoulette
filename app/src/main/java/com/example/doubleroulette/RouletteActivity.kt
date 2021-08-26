@@ -3,34 +3,22 @@ package com.example.doubleroulette
 import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import com.example.doubleroulette.databinding.ActivityRouletteBinding
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
-import io.realm.Realm
-import io.realm.kotlin.where
 
 class RouletteActivity : AppCompatActivity() {
+
     private lateinit var binding: ActivityRouletteBinding
     private lateinit var player: MediaPlayer
     private lateinit var bottomBannerAdView: AdView
-    private lateinit var realm: Realm
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        realm = Realm.getDefaultInstance()
-
         initView()
-
         setupAd()
         setupBackButton()
         setupStartButton()
-        setupRoulette()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        realm.close()
     }
 
     // 本Viewの初期化処理
@@ -59,25 +47,6 @@ class RouletteActivity : AppCompatActivity() {
             player.start()
             // TODO: ルーレットを回す処理を追記
         }
-    }
-
-    private fun setupRoulette() {
-        // ルーレットデータを取得
-        val roulette = realm.where<DoubleRouletteModel>().findAll()
-        // 一応正しく取得できるか確認するためにログ出力
-        roulette.forEach {
-            Log.i("Cell ID : ", it.id.toString())
-            Log.i("Cell Title : ", it.itemName)
-        }
-
-        // TODO: ルーレットの描画処理を行う
-        // TODO: データを整形して描画関数を呼ぶ
-//        drawRoulette(outerItem, innerItem, outerColor, innerColor)
-    }
-
-    private fun drawRoulette(outerItem: Array<String>?, innerItem: Array<String>?, outerColor: Array<String>?, innerColor: Array<String>?) {
-        // TODO: ルーレットの表示処理を追記するべし
-        // TODO: nullチェックを必ずすべし
     }
 
 }
