@@ -6,6 +6,8 @@
         <entry key="../../../../layout/custom_preview.xml" value="0.37552083333333336" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.2407226562499999" />
         <entry key="app/src/main/res/layout/activity_roulette.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_inner_roulette.xml" value="0.335" />
+        <entry key="app/src/main/res/layout/fragment_outer_roulette.xml" value="0.353713768115942" />
         <entry key="app/src/main/res/layout/roulette_cell.xml" value="0.335" />
       </map>
     </option>

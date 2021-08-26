@@ -11,4 +11,6 @@
     <string name="recyclerview_description">recyclerview_description</string>
     <string name="item_hint">item</string>
     <string name="color_button_description">color_button</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
