@@ -4,8 +4,6 @@ import android.content.Context
 import android.graphics.*
 import android.view.View
 import io.realm.RealmResults
-import kotlin.math.cos
-import kotlin.math.sin
 
 
 class PieChartView(context: Context, private var rouletteData: RealmResults<DoubleRouletteModel>,
@@ -38,15 +36,15 @@ class PieChartView(context: Context, private var rouletteData: RealmResults<Doub
         paint.style = Paint.Style.FILL_AND_STROKE
         paint.color = Color.BLACK
         paint.textSize = 40F
-        // ラベルのX座標：内側の場合は radius/2 の位置、外側の場合は radius * 7 / 4 の位置
-        val labelX = if (isInner) radius / 2 else radius * 7 / 4
+        // ラベルのX座標：内側の場合は radius*3/2 の位置、外側の場合は radius*7/4 の位置
+        val labelX = if (isInner) radius * 3 / 2 else radius * 7 / 4
         val labelY = radius
-        var radian = CalculateHelper().radianFromDegree(partAngle / 2)
+        var radian = CalculateHelper().radianFromDegree(-partAngle / 2) // 反時計回りを表現するため負
         rouletteData.forEach {
             val labelPoint =
                 CalculateHelper().rotatePoint(labelX, labelY, radius, radius, radian)
             canvas.drawText(it.itemName, labelPoint.first() - radius / 8/*ラベルを若干左にずらすため-rad/8*/, labelPoint.last(), paint)
-            radian += CalculateHelper().radianFromDegree(partAngle)
+            radian += CalculateHelper().radianFromDegree(-partAngle) // 反時計回りを表現するため負
         }
     }
 
