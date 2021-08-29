@@ -32,4 +32,9 @@ class InnerRouletteFragment : Fragment() {
         return null
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        realm.close()
+    }
+
 }

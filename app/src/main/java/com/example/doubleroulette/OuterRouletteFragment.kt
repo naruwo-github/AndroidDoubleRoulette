@@ -32,4 +32,9 @@ class OuterRouletteFragment : Fragment() {
         return null
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        realm.close()
+    }
+
 }
