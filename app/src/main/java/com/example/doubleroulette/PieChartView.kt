@@ -6,22 +6,27 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
 import android.view.View
+import io.realm.RealmResults
 
-class PieChartView(context: Context) : View(context, null) {
+
+class PieChartView(context: Context, private var rouletteData: RealmResults<DoubleRouletteModel>,
+                   radius: Float
+) : View(context, null) {
+
+    private val paint = Paint()
+    private val rect = RectF(0F, 0F, radius * 2, radius * 2)
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
 
-        // 描画を確認するための仮の実装
-        val paint = Paint()
-        paint.color = Color.rgb(255,212,121)
-        val strokeWidth: Float = (width / 8).toFloat()
-        paint.strokeWidth = strokeWidth
-        paint.isAntiAlias = true
-        paint.style = Paint.Style.STROKE
-        paint.strokeCap = Paint.Cap.ROUND
-        val rect = RectF(strokeWidth/2, strokeWidth/2, width.toFloat()-strokeWidth/2, height.toFloat()-strokeWidth/2)
-        canvas!!.drawArc(rect, 0f, 360f, false, paint)
+        val partAngle = 360F / rouletteData.count()
+        var endAngle = 360F
+        rouletteData.forEach {
+            paint.color = Color.parseColor("#${it.itemColorR}${it.itemColorG}${it.itemColorB}")
+            canvas!!.drawArc(rect, 0F, endAngle, true, paint)
+            endAngle -= partAngle
+        }
 
     }
+
 }
