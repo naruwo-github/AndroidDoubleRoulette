@@ -27,7 +27,7 @@ class InnerRouletteFragment : Fragment() {
         val innerRouletteData = realm.where<DoubleRouletteModel>().equalTo("isInner", true).findAll()
         innerRouletteData?.let {
             val metrics = this.requireActivity().windowManager.currentWindowMetrics
-            return PieChartView(this.requireContext(), it, metrics.bounds.width().toFloat() / 2)
+            return PieChartView(this.requireContext(), it, metrics.bounds.width().toFloat() / 2 / 2)
         }
         return null
     }
