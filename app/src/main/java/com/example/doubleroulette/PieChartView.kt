@@ -40,25 +40,9 @@ class PieChartView(context: Context, private var rouletteData: RealmResults<Doub
             paint.style = Paint.Style.FILL_AND_STROKE
             paint.color = Color.BLACK
             paint.textSize = 40F
-            val labelPoint = rotatePoint(labelX, labelY, radius, radius, endAngle + partAngle / 2)
+            val labelPoint = CalculateHelper().rotatePoint(labelX, labelY, radius, radius, endAngle + partAngle / 2)
             canvas.drawText(it.itemName, labelPoint.first(), labelPoint.last(), paint)
         }
-    }
-
-    // TODO: 計算処理を持たせるクラスに移動する？
-    /**
-     * @property x 回転したい点のX座標
-     * @property y 回転したい点のY座標
-     * @property centerX 回転の中心となる点のX座標
-     * @property centerY 回転の中心となる点のX座標
-     * @property angle 回転の角度
-     */
-    private fun rotatePoint(x: Float, y: Float, centerX: Float, centerY: Float, angle: Float): Set<Float> {
-        val mX = x - centerX
-        val mY = y - centerY
-        val mXRotated = mX * cos(angle) - mY * sin(angle)
-        val mYRotated = mX * sin(angle) + mY * cos(angle)
-        return setOf(mXRotated + centerX, mYRotated + centerY)
     }
 
 }
