@@ -6,9 +6,6 @@ import kotlin.math.sin
 
 class CalculateHelper {
 
-    init {
-    }
-
     /**
      * 回転の方向：反時計回り
      * @property x 回転したい点のX座標

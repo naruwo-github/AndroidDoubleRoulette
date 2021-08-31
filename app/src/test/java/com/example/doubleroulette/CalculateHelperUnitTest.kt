@@ -4,7 +4,6 @@ import org.junit.Test
 
 import org.junit.Assert.*
 import kotlin.math.PI
-import kotlin.math.cos
 import kotlin.math.sqrt
 
 class CalculateHelperUnitTest {
