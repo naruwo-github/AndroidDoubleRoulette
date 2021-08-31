@@ -46,7 +46,7 @@ class RouletteActivity : AppCompatActivity() {
     }
 
     private fun setupAd() {
-        bottomBannerAdView = findViewById(R.id.bottomBannerAdView2)
+        bottomBannerAdView = findViewById(R.id.rouletteBottomBannerAdView)
         val adRequest = AdRequest.Builder().build()
         bottomBannerAdView.loadAd(adRequest)
     }

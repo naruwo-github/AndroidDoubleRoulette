@@ -10,7 +10,6 @@ import android.text.Editable
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.graphics.blue
 import androidx.core.graphics.green
@@ -137,7 +136,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupAd() {
         MobileAds.initialize(this) {}
-        bottomBannerAdView = findViewById(R.id.bottomBannerAdView)
+        bottomBannerAdView = findViewById(R.id.settingBottomBannerAdView)
         val adRequest = AdRequest.Builder().build()
         bottomBannerAdView.loadAd(adRequest)
     }
