@@ -69,8 +69,8 @@ class RouletteActivity : AppCompatActivity() {
             toDegreesInner -= toDegrees
 
             // 回転アニメーションを開始
-            binding.outerRouletteFragmentView.startAnimation(makeRotation(fromDegreesOuter, toDegreesOuter))
-            binding.innerRouletteFragmentView.startAnimation(makeRotation(fromDegreesInner, toDegreesInner))
+            binding.outerRouletteFragmentView.startAnimation(makeRotation(fromDegreesOuter, toDegreesOuter, OUTER_ANIMATION_TIME))
+            binding.innerRouletteFragmentView.startAnimation(makeRotation(fromDegreesInner, toDegreesInner, INNER_ANIMATION_TIME))
 
             // 回転角度を保存して更新
             fromDegreesOuter = toDegreesOuter
@@ -87,13 +87,13 @@ class RouletteActivity : AppCompatActivity() {
         }, INNER_ANIMATION_TIME)
     }
 
-    private fun makeRotation(fromDegrees: Float, toDegrees: Float): RotateAnimation {
+    private fun makeRotation(fromDegrees: Float, toDegrees: Float, duration: Long): RotateAnimation {
         val rotation = RotateAnimation(
             fromDegrees, toDegrees,
             Animation.RELATIVE_TO_SELF, 0.5F,
             Animation.RELATIVE_TO_SELF, 0.5F
         )
-        rotation.duration = INNER_ANIMATION_TIME
+        rotation.duration = duration
         rotation.fillAfter = true
         return rotation
     }
