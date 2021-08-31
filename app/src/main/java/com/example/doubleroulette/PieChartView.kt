@@ -17,12 +17,12 @@ class PieChartView(context: Context, private var rouletteData: RealmResults<Doub
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
         canvas?.let {
-            drawRoulette(it)
+            drawRouletteCell(it)
             drawRouletteLabel(it)
         }
     }
 
-    private fun drawRoulette(canvas: Canvas) {
+    private fun drawRouletteCell(canvas: Canvas) {
         var endAngle = 360F
         val rect = RectF(0F, 0F, radius * 2, radius * 2)
         rouletteData.forEach {
