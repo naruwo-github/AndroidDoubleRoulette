@@ -11,6 +11,7 @@ import android.view.animation.RotateAnimation
 import com.example.doubleroulette.databinding.ActivityRouletteBinding
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
+import kotlin.random.Random
 
 class RouletteActivity : AppCompatActivity() {
 
@@ -18,6 +19,11 @@ class RouletteActivity : AppCompatActivity() {
     private lateinit var player: MediaPlayer
     private lateinit var bottomBannerAdView: AdView
     private lateinit var handler: Handler
+
+    private var fromDegreesOuter = 0F   // 外側ルーレットの開始角度
+    private var fromDegreesInner = 0F   // 内側ルーレットの開始角度
+    private var toDegreesOuter = 0F     // 外側ルーレットの終了角度
+    private var toDegreesInner = 0F     // 内側ルーレットの終了角度
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,34 +60,42 @@ class RouletteActivity : AppCompatActivity() {
         player = MediaPlayer.create(this, R.raw.roulette_sound)
         binding.startButton.setOnClickListener {
             player.start()
-            // 音が鳴り止むまで4秒+1秒間イベント受付を無効化する
-            window.addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+            // ルーレットが止まるまで、イベント検知を無効
+            preventEventWhileRotating()
 
-            // 外側のルーレットを一回転させるアニメーションを作成
-            // TODO: ここの360Fをいい感じにランダムで計算して設定すべし
-            val outerRotation = RotateAnimation(
-                0F, 360F,
-                Animation.RELATIVE_TO_SELF, 0.5F,
-                Animation.RELATIVE_TO_SELF, 0.5F
-            )
-            outerRotation.duration = OUTER_ANIMATION_TIME
-            // 内側のルーレットを一回転させるアニメーションを作成
-            // TODO: ここの-360Fをいい感じにランダムで計算して設定すべし
-            val innerRotation = RotateAnimation(
-                0F, -360F,
-                Animation.RELATIVE_TO_SELF, 0.5F,
-                Animation.RELATIVE_TO_SELF, 0.5F
-            )
-            innerRotation.duration = INNER_ANIMATION_TIME
+            // 2~5回転のうちでランダムな回転角度を設定
+            val toDegrees = 360F * (2F + 3F * Random.nextFloat())
+            toDegreesOuter += toDegrees
+            toDegreesInner -= toDegrees
 
-            handler.postDelayed({
-                // 4秒+1秒間後、無効化解除
-                window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-            }, INNER_ANIMATION_TIME)
+            // 回転アニメーションを開始
+            binding.outerRouletteFragmentView.startAnimation(makeRotation(fromDegreesOuter, toDegreesOuter))
+            binding.innerRouletteFragmentView.startAnimation(makeRotation(fromDegreesInner, toDegreesInner))
 
-            binding.outerRouletteFragmentView.startAnimation(outerRotation)
-            binding.innerRouletteFragmentView.startAnimation(innerRotation)
+            // 回転角度を保存して更新
+            fromDegreesOuter = toDegreesOuter
+            fromDegreesInner = toDegreesInner
         }
+    }
+
+    private fun preventEventWhileRotating() {
+        // 音が鳴り止むまで4秒+1秒間イベント受付を無効化する
+        window.addFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+        handler.postDelayed({
+            // 4秒+1秒間後、無効化解除
+            window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+        }, INNER_ANIMATION_TIME)
+    }
+
+    private fun makeRotation(fromDegrees: Float, toDegrees: Float): RotateAnimation {
+        val rotation = RotateAnimation(
+            fromDegrees, toDegrees,
+            Animation.RELATIVE_TO_SELF, 0.5F,
+            Animation.RELATIVE_TO_SELF, 0.5F
+        )
+        rotation.duration = INNER_ANIMATION_TIME
+        rotation.fillAfter = true
+        return rotation
     }
 
     companion object {
