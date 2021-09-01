@@ -90,4 +90,15 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.75" />
 
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/arrowFragmentView"
+        android:name="com.example.doubleroulette.ArrowViewFragment"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/rouletteBottomBannerAdView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rouletteTopView"
+        tools:layout="@layout/fragment_arrow_view" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
