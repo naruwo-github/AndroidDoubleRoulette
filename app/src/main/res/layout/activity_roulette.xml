@@ -60,7 +60,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rouletteTopView" />
+        app:layout_constraintTop_toBottomOf="@+id/rouletteTopView"
+        tools:layout="@layout/fragment_outer_roulette" />
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/innerRouletteFragmentView"
@@ -72,7 +73,8 @@
         app:layout_constraintEnd_toStartOf="@+id/guidelineRight"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/guidelineLeft"
-        app:layout_constraintTop_toBottomOf="@+id/rouletteTopView" />
+        app:layout_constraintTop_toBottomOf="@+id/rouletteTopView"
+        tools:layout="@layout/fragment_inner_roulette" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineLeft"
