@@ -5,9 +5,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
-import android.util.DisplayMetrics
 import android.view.View
-import kotlin.concurrent.fixedRateTimer
 
 class ArrowView(context: Context) : View(context) {
 
@@ -19,44 +17,38 @@ class ArrowView(context: Context) : View(context) {
         canvas?.let {
             paint.color = Color.BLACK
             paint.style = Paint.Style.FILL
-            drawArrowTop(it)
-            drawArrowBottom(it)
+            val viewHalfWidth = width.toFloat() / 2
+            val viewHalfHeight = height.toFloat() / 2
+            drawArrowTop(it, viewHalfWidth, viewHalfHeight)
+            drawArrowBottom(it, viewHalfWidth, viewHalfHeight)
         }
     }
 
-    private fun drawArrowTop(canvas: Canvas) {
-        val viewHalfWidth = width.toFloat() / 2
-        val viewHalfHeight = height.toFloat() / 2
+    private fun drawArrowTop(canvas: Canvas, halfWidth: Float, halfHeight: Float) {
         // 画面上部の矢印を描画する（外側ルーレットを指す）
-        val firstX = viewHalfWidth
-        val firstY = viewHalfHeight / 2
-        val secondX = viewHalfWidth - 50
-        val secondY = viewHalfHeight / 8
-        val thirdX = viewHalfWidth + 50
-        val thirdY = viewHalfHeight / 8
-
-        path.moveTo(firstX, firstY)
+        val firstY = halfHeight / 2
+        val secondX = halfWidth - 50
+        val secondY = halfHeight / 8
+        val thirdX = halfWidth + 50
+        val thirdY = halfHeight / 8
+        path.moveTo(halfWidth, firstY)
         path.lineTo(secondX, secondY)
         path.lineTo(thirdX, thirdY)
-        path.lineTo(firstX, firstY)
+        path.lineTo(halfWidth, firstY)
         canvas.drawPath(path, paint)
     }
 
-    private fun drawArrowBottom(canvas: Canvas) {
-        val viewHalfWidth = width.toFloat() / 2
-        val viewHalfHeight = height.toFloat() / 2
+    private fun drawArrowBottom(canvas: Canvas, halfWidth: Float, halfHeight: Float) {
         // 画面下部の矢印を描画する（内側ルーレットを指す）
-        val firstX = viewHalfWidth
-        val firstY = viewHalfHeight * 5 / 4
-        val secondX = viewHalfWidth - 50
-        val secondY = viewHalfHeight * 15 / 8
-        val thirdX = viewHalfWidth + 50
-        val thirdY = viewHalfHeight * 15 / 8
-
-        path.moveTo(firstX, firstY)
+        val firstY = halfHeight * 5 / 4
+        val secondX = halfWidth - 50
+        val secondY = halfHeight * 15 / 8
+        val thirdX = halfWidth + 50
+        val thirdY = halfHeight * 15 / 8
+        path.moveTo(halfWidth, firstY)
         path.lineTo(secondX, secondY)
         path.lineTo(thirdX, thirdY)
-        path.lineTo(firstX, firstY)
+        path.lineTo(halfWidth, firstY)
         canvas.drawPath(path, paint)
     }
 
