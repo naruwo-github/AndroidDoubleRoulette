@@ -9,7 +9,7 @@ android {
     compileSdk 30
 
     defaultConfig {
-        applicationId "com.example.doubleroulette"
+        applicationId "com.channaru.doubleroulette"
         minSdk 23
         targetSdk 30
         versionCode 1
