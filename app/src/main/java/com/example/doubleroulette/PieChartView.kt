@@ -6,8 +6,9 @@ import android.view.View
 import io.realm.RealmResults
 
 
-class PieChartView(context: Context, private var rouletteData: RealmResults<DoubleRouletteModel>,
-                   private val radius: Float, private val isInner: Boolean
+class PieChartView(
+    context: Context, private var rouletteData: RealmResults<DoubleRouletteModel>,
+    private val isInner: Boolean
 ) : View(context, null) {
 
     // ルーレットセル一つ分の角度（＊ラジアンではないことに注意）
@@ -23,6 +24,7 @@ class PieChartView(context: Context, private var rouletteData: RealmResults<Doub
     }
 
     private fun drawRouletteCell(canvas: Canvas) {
+        val radius = width.toFloat() / 2
         var endAngle = 360F
         val rect = RectF(0F, 0F, radius * 2, radius * 2)
         rouletteData.forEach {
@@ -33,6 +35,7 @@ class PieChartView(context: Context, private var rouletteData: RealmResults<Doub
     }
 
     private fun drawRouletteLabel(canvas: Canvas) {
+        val radius = width.toFloat() / 2
         paint.style = Paint.Style.FILL_AND_STROKE
         paint.color = Color.BLACK
         paint.textSize = 40F
