@@ -1,4 +1,4 @@
-package com.example.doubleroulette
+package com.channaru.doubleroulette
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

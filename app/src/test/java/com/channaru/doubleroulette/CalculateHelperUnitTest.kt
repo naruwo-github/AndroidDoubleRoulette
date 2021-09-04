@@ -1,4 +1,4 @@
-package com.example.doubleroulette
+package com.channaru.doubleroulette
 
 import org.junit.Test
 

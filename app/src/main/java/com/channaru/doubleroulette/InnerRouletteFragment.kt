@@ -1,4 +1,4 @@
-package com.example.doubleroulette
+package com.channaru.doubleroulette
 
 import android.os.Build
 import android.os.Bundle
@@ -10,7 +10,7 @@ import androidx.annotation.RequiresApi
 import io.realm.Realm
 import io.realm.kotlin.where
 
-class OuterRouletteFragment : Fragment() {
+class InnerRouletteFragment : Fragment() {
 
     private lateinit var realm: Realm
 
@@ -24,10 +24,10 @@ class OuterRouletteFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val outerRouletteData = realm.where<DoubleRouletteModel>().equalTo("isInner", false).findAll()
-        outerRouletteData?.let {
+        val innerRouletteData = realm.where<DoubleRouletteModel>().equalTo("isInner", true).findAll()
+        innerRouletteData?.let {
             if (it.count() > 0) {
-                return PieChartView(this.requireContext(), it, false)
+                return PieChartView(this.requireContext(), it, true)
             }
         }
         return null

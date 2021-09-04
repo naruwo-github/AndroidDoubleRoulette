@@ -1,4 +1,4 @@
-package com.example.doubleroulette
+package com.channaru.doubleroulette
 
 import android.graphics.Color
 import android.view.LayoutInflater
@@ -62,14 +62,14 @@ class DoubleRouletteModelAdapter(data: OrderedRealmCollection<DoubleRouletteMode
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): DoubleRouletteModelAdapter.ViewHolder {
+    ): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val view = inflater.inflate(R.layout.roulette_cell, parent, false)
         return ViewHolder(view)
     }
 
     // 1行分のViewHolderの詳細設定をする関数
-    override fun onBindViewHolder(holder: DoubleRouletteModelAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         // 循環呼び出しを防ぐためのリスナ初期化
         holder.itemView.setOnClickListener(null)
         holder.isInnerSwitch.setOnCheckedChangeListener(null)

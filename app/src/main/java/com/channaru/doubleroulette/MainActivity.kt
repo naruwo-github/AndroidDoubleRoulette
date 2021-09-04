@@ -1,4 +1,4 @@
-package com.example.doubleroulette
+package com.channaru.doubleroulette
 
 import android.content.Context
 import android.content.DialogInterface
@@ -16,7 +16,7 @@ import androidx.core.graphics.green
 import androidx.core.graphics.red
 import androidx.core.view.allViews
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.doubleroulette.databinding.ActivityMainBinding
+import com.channaru.doubleroulette.databinding.ActivityMainBinding
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds

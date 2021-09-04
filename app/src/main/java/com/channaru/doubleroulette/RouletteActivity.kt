@@ -1,4 +1,4 @@
-package com.example.doubleroulette
+package com.channaru.doubleroulette
 
 import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
@@ -8,7 +8,7 @@ import android.os.Looper
 import android.view.WindowManager
 import android.view.animation.Animation
 import android.view.animation.RotateAnimation
-import com.example.doubleroulette.databinding.ActivityRouletteBinding
+import com.channaru.doubleroulette.databinding.ActivityRouletteBinding
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import kotlin.random.Random
