@@ -83,7 +83,6 @@ class DoubleRouletteModelAdapter(data: OrderedRealmCollection<DoubleRouletteMode
         holder.isInnerSwitch.isChecked = roulette.isInner == true
         holder.itemNameText.text = roulette.itemName
         val hexColorText = "#" + roulette.itemColorR + roulette.itemColorG + roulette.itemColorB
-        holder.colorButton.text = hexColorText
         holder.colorButton.setBackgroundColor(Color.parseColor(hexColorText))
 
         holder.itemView.setOnClickListener {
