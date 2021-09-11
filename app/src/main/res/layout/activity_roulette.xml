@@ -60,7 +60,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/outerRouletteFragmentView"
-        android:name="com.channaru.doubleroulette.OuterRouletteFragment"
+        android:name="com.channaru.doubleroulette.view.OuterRouletteFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/adAreaView"
@@ -73,7 +73,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/innerRouletteFragmentView"
-        android:name="com.channaru.doubleroulette.InnerRouletteFragment"
+        android:name="com.channaru.doubleroulette.view.InnerRouletteFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/adAreaView"
@@ -100,7 +100,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/arrowFragmentView"
-        android:name="com.channaru.doubleroulette.ArrowViewFragment"
+        android:name="com.channaru.doubleroulette.view.ArrowViewFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/adAreaView"

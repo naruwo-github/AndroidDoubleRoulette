@@ -1,4 +1,4 @@
-package com.channaru.doubleroulette
+package com.channaru.doubleroulette.view
 
 import android.content.Context
 import android.graphics.*

@@ -1,4 +1,4 @@
-package com.channaru.doubleroulette
+package com.channaru.doubleroulette.view
 
 import android.os.Build
 import android.os.Bundle

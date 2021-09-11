@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.channaru.doubleroulette.databinding.ActivityMainBinding
 import com.channaru.doubleroulette.model.ColorHelper
 import com.channaru.doubleroulette.model.DoubleRouletteModel
+import com.channaru.doubleroulette.view_model.DoubleRouletteModelAdapter
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds

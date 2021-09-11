@@ -1,4 +1,4 @@
-package com.channaru.doubleroulette
+package com.channaru.doubleroulette.view_model
 
 import android.graphics.Color
 import android.view.LayoutInflater
@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.Switch
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.channaru.doubleroulette.R
 import com.channaru.doubleroulette.model.DoubleRouletteModel
 import io.realm.OrderedRealmCollection
 import io.realm.RealmRecyclerViewAdapter

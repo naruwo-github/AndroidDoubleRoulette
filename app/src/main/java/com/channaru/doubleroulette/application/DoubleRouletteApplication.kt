@@ -1,4 +1,4 @@
-package com.channaru.doubleroulette
+package com.channaru.doubleroulette.application
 
 import android.app.Application
 import io.realm.Realm
