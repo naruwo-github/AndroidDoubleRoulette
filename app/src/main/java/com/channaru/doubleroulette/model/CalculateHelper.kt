@@ -1,4 +1,4 @@
-package com.channaru.doubleroulette
+package com.channaru.doubleroulette.model
 
 import kotlin.math.PI
 import kotlin.math.cos

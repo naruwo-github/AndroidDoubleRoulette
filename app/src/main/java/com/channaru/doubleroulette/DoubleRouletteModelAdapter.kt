@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.Switch
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.channaru.doubleroulette.model.DoubleRouletteModel
 import io.realm.OrderedRealmCollection
 import io.realm.RealmRecyclerViewAdapter
 
@@ -83,7 +84,6 @@ class DoubleRouletteModelAdapter(data: OrderedRealmCollection<DoubleRouletteMode
         holder.isInnerSwitch.isChecked = roulette.isInner == true
         holder.itemNameText.text = roulette.itemName
         val hexColorText = "#" + roulette.itemColorR + roulette.itemColorG + roulette.itemColorB
-        holder.colorButton.text = hexColorText
         holder.colorButton.setBackgroundColor(Color.parseColor(hexColorText))
 
         holder.itemView.setOnClickListener {
