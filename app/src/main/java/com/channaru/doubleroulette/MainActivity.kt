@@ -17,6 +17,7 @@ import androidx.core.graphics.red
 import androidx.core.view.allViews
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.channaru.doubleroulette.databinding.ActivityMainBinding
+import com.channaru.doubleroulette.model.ColorHelper
 import com.channaru.doubleroulette.model.DoubleRouletteModel
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
@@ -31,10 +32,12 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var bottomBannerAdView: AdView
     private lateinit var realm: Realm
+    private lateinit var colorHelper: ColorHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         realm = Realm.getDefaultInstance()
+        colorHelper = ColorHelper()
 
         initView()
         setupRecyclerView()
@@ -147,7 +150,12 @@ class MainActivity : AppCompatActivity() {
             realm.executeTransaction { db: Realm ->
                 val maxId = db.where<DoubleRouletteModel>().max("id")
                 val nextId = (maxId?.toLong() ?: 0L) + 1L
-                db.createObject<DoubleRouletteModel>(nextId)
+                val newCell = db.createObject<DoubleRouletteModel>(nextId)
+
+                val initialColor = colorHelper.returnColorRGBString(db.where<DoubleRouletteModel>().count().toInt())
+                newCell.itemColorR = initialColor[0]
+                newCell.itemColorG = initialColor[1]
+                newCell.itemColorB = initialColor[2]
             }
         }
     }
