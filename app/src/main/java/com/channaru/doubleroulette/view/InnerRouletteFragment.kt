@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import com.channaru.doubleroulette.model.DoubleRouletteModel
+import com.channaru.doubleroulette.model.RealmHelper
 import io.realm.Realm
 import io.realm.kotlin.where
 
@@ -17,7 +18,7 @@ class InnerRouletteFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        realm = Realm.getDefaultInstance()
+        realm = RealmHelper.getInstance()
     }
 
     @RequiresApi(Build.VERSION_CODES.R)

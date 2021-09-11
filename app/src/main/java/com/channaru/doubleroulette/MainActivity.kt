@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.channaru.doubleroulette.databinding.ActivityMainBinding
 import com.channaru.doubleroulette.model.ColorHelper
 import com.channaru.doubleroulette.model.DoubleRouletteModel
+import com.channaru.doubleroulette.model.RealmHelper
 import com.channaru.doubleroulette.view_model.DoubleRouletteModelAdapter
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
@@ -37,7 +38,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        realm = Realm.getDefaultInstance()
+        realm = RealmHelper.getInstance()
         colorHelper = ColorHelper()
 
         initView()
@@ -70,8 +71,7 @@ class MainActivity : AppCompatActivity() {
     private fun setupRecyclerView() {
         // データを一列で表示するようにLayoutManagerを設定
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
-        val roulette = realm.where<DoubleRouletteModel>().findAll()
-        val adapter = DoubleRouletteModelAdapter(roulette)
+        val adapter = DoubleRouletteModelAdapter(RealmHelper.getAllRouletteData())
         binding.recyclerView.adapter = adapter
 
         // RecyclerViewのセルをタップした時のイベントリスナー
