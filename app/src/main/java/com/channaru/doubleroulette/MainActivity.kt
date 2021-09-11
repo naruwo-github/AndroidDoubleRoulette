@@ -1,7 +1,6 @@
 package com.channaru.doubleroulette
 
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
@@ -157,9 +156,9 @@ class MainActivity : AppCompatActivity() {
         textView.text = text as Editable?
         AlertDialog.Builder(this)
             .setView(textView)
-            .setPositiveButton("OK", DialogInterface.OnClickListener { _, _ ->
+            .setPositiveButton("OK") { _, _ ->
                 RealmHelper.updateTextById(id, textView.text.toString())
-            })
+            }
             .setNegativeButton("CANCEL", null)
             .create()
             .show()
