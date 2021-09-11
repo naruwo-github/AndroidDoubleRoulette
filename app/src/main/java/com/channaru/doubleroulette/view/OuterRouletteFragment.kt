@@ -1,4 +1,4 @@
-package com.channaru.doubleroulette
+package com.channaru.doubleroulette.view
 
 import android.os.Build
 import android.os.Bundle
@@ -7,36 +7,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
-import com.channaru.doubleroulette.model.DoubleRouletteModel
-import io.realm.Realm
-import io.realm.kotlin.where
+import com.channaru.doubleroulette.model.RealmHelper
 
 class OuterRouletteFragment : Fragment() {
-
-    private lateinit var realm: Realm
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        realm = Realm.getDefaultInstance()
-    }
 
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val outerRouletteData = realm.where<DoubleRouletteModel>().equalTo("isInner", false).findAll()
-        outerRouletteData?.let {
+        val outerRouletteData = RealmHelper.getOuterRouletteData()
+        outerRouletteData.let {
             if (it.count() > 0) {
                 return PieChartView(this.requireContext(), it, false)
             }
         }
         return null
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        realm.close()
     }
 
 }

@@ -1,7 +1,6 @@
 package com.channaru.doubleroulette
 
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
@@ -18,25 +17,21 @@ import androidx.core.view.allViews
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.channaru.doubleroulette.databinding.ActivityMainBinding
 import com.channaru.doubleroulette.model.ColorHelper
-import com.channaru.doubleroulette.model.DoubleRouletteModel
+import com.channaru.doubleroulette.model.RealmHelper
+import com.channaru.doubleroulette.view_model.DoubleRouletteModelAdapter
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
-import io.realm.Realm
-import io.realm.kotlin.createObject
-import io.realm.kotlin.where
 import vadiole.colorpicker.ColorModel
 import vadiole.colorpicker.ColorPickerDialog
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var bottomBannerAdView: AdView
-    private lateinit var realm: Realm
     private lateinit var colorHelper: ColorHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        realm = Realm.getDefaultInstance()
         colorHelper = ColorHelper()
 
         initView()
@@ -46,11 +41,6 @@ class MainActivity : AppCompatActivity() {
         setupAddButton()
         setupClearButton()
         setupToRouletteButton()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        realm.close()
     }
 
     // 「RecyclerView、各種ボタン、セル以外のView」をタップした際にキーボード非表示
@@ -69,8 +59,7 @@ class MainActivity : AppCompatActivity() {
     private fun setupRecyclerView() {
         // データを一列で表示するようにLayoutManagerを設定
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
-        val roulette = realm.where<DoubleRouletteModel>().findAll()
-        val adapter = DoubleRouletteModelAdapter(roulette)
+        val adapter = DoubleRouletteModelAdapter(RealmHelper.getAllRouletteData())
         binding.recyclerView.adapter = adapter
 
         // RecyclerViewのセルをタップした時のイベントリスナー
@@ -80,7 +69,7 @@ class MainActivity : AppCompatActivity() {
 
         // 単一のセルのスイッチの状態を更新する処理を設定
         adapter.setOnUpdateSwitchListener { id, isChecked ->
-            updateSwitchById(id, isChecked)
+            RealmHelper.updateSwitchById(id, isChecked)
         }
 
         // 単一のセルのテキストの状態を更新する処理を設定
@@ -97,45 +86,15 @@ class MainActivity : AppCompatActivity() {
                 if (g == "0") g = "00"
                 var b = Integer.toHexString(color.blue)
                 if (b == "0") b = "00"
-                updateColorById(id, r, g, b)
+                RealmHelper.updateColorById(id, r, g, b)
             }
         }
 
         // 単一のセルを削除する処理を設定
         adapter.setDeleteListener { id ->
-            deleteDataById(id)
+            RealmHelper.deleteDataById(id)
         }
 
-    }
-
-    private fun updateSwitchById(id: Long, isChecked: Boolean) {
-        realm.executeTransaction { db: Realm ->
-            val roulette = db.where<DoubleRouletteModel>().equalTo("id", id).findFirst()
-            roulette?.isInner = isChecked
-        }
-    }
-
-    private fun updateTextById(id: Long, text: String) {
-        realm.executeTransaction { db: Realm ->
-            val roulette = db.where<DoubleRouletteModel>().equalTo("id", id).findFirst()
-            roulette?.itemName = text
-        }
-    }
-
-    // 16進数のカラーコード（hexString）を保存する処理
-    private fun updateColorById(id: Long, r: String, g: String, b: String) {
-        realm.executeTransaction { db: Realm ->
-            val roulette = db.where<DoubleRouletteModel>().equalTo("id", id).findFirst()
-            roulette?.itemColorR = r
-            roulette?.itemColorG = g
-            roulette?.itemColorB = b
-        }
-    }
-
-    private fun deleteDataById(id: Long) {
-        realm.executeTransaction { db: Realm ->
-            db.where<DoubleRouletteModel>().equalTo("id", id).findFirst()?.deleteFromRealm()
-        }
     }
 
     private fun setupAd() {
@@ -147,24 +106,13 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupAddButton() {
         binding.addButton.setOnClickListener {
-            realm.executeTransaction { db: Realm ->
-                val maxId = db.where<DoubleRouletteModel>().max("id")
-                val nextId = (maxId?.toLong() ?: 0L) + 1L
-                val newCell = db.createObject<DoubleRouletteModel>(nextId)
-
-                val initialColor = colorHelper.returnColorRGBString(db.where<DoubleRouletteModel>().count().toInt())
-                newCell.itemColorR = initialColor[0]
-                newCell.itemColorG = initialColor[1]
-                newCell.itemColorB = initialColor[2]
-            }
+            RealmHelper.createNewRoulette(colorHelper)
         }
     }
 
     private fun setupClearButton() {
         binding.clearButton.setOnClickListener {
-            realm.executeTransaction { db: Realm ->
-                db.where<DoubleRouletteModel>().findAll().deleteAllFromRealm()
-            }
+            RealmHelper.clearData()
         }
     }
 
@@ -208,9 +156,9 @@ class MainActivity : AppCompatActivity() {
         textView.text = text as Editable?
         AlertDialog.Builder(this)
             .setView(textView)
-            .setPositiveButton("OK", DialogInterface.OnClickListener { _, _ ->
-                updateTextById(id, textView.text.toString())
-            })
+            .setPositiveButton("OK") { _, _ ->
+                RealmHelper.updateTextById(id, textView.text.toString())
+            }
             .setNegativeButton("CANCEL", null)
             .create()
             .show()
