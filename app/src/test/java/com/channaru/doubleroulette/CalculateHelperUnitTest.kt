@@ -1,5 +1,6 @@
 package com.channaru.doubleroulette
 
+import com.channaru.doubleroulette.model.CalculateHelper
 import org.junit.Test
 
 import org.junit.Assert.*

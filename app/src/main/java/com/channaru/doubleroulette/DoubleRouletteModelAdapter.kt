@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.Switch
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.channaru.doubleroulette.model.DoubleRouletteModel
 import io.realm.OrderedRealmCollection
 import io.realm.RealmRecyclerViewAdapter
 

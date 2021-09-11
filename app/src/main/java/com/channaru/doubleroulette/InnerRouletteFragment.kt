@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
+import com.channaru.doubleroulette.model.DoubleRouletteModel
 import io.realm.Realm
 import io.realm.kotlin.where
 

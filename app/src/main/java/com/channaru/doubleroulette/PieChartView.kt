@@ -3,6 +3,8 @@ package com.channaru.doubleroulette
 import android.content.Context
 import android.graphics.*
 import android.view.View
+import com.channaru.doubleroulette.model.CalculateHelper
+import com.channaru.doubleroulette.model.DoubleRouletteModel
 import io.realm.RealmResults
 
 

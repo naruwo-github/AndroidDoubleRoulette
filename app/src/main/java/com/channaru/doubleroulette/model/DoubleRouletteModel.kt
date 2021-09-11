@@ -1,4 +1,4 @@
-package com.channaru.doubleroulette
+package com.channaru.doubleroulette.model
 
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
