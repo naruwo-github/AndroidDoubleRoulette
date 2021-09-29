@@ -1,6 +1,5 @@
 package com.channaru.doubleroulette
 
-import android.app.AlertDialog
 import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -9,8 +8,9 @@ import android.os.Looper
 import android.view.WindowManager
 import android.view.animation.Animation
 import android.view.animation.RotateAnimation
-import android.widget.Toast
+import androidx.fragment.app.DialogFragment
 import com.channaru.doubleroulette.databinding.ActivityRouletteBinding
+import com.channaru.doubleroulette.view.ResultDialog
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import kotlin.random.Random
@@ -21,7 +21,7 @@ class RouletteActivity : AppCompatActivity() {
     private lateinit var player: MediaPlayer
     private lateinit var bottomBannerAdView: AdView
     private lateinit var handler: Handler
-    private lateinit var dialog: AlertDialog
+    private lateinit var dialog: DialogFragment
 
     private var fromDegreesOuter = 0F   // 外側ルーレットの開始角度
     private var fromDegreesInner = 0F   // 内側ルーレットの開始角度
@@ -46,14 +46,7 @@ class RouletteActivity : AppCompatActivity() {
 
     private fun setupHandlerAndDialog() {
         handler = Handler(Looper.getMainLooper())
-        // TODO: Replace this to custom dialog
-        dialog = AlertDialog.Builder(this)
-            .setTitle("title")
-            .setMessage("message")
-            .setPositiveButton("OK") { _, _ ->
-                Toast.makeText(this, "OK tapped", Toast.LENGTH_SHORT).show()
-            }
-            .create()
+        dialog = ResultDialog()
     }
 
     private fun setupAd() {
@@ -107,9 +100,12 @@ class RouletteActivity : AppCompatActivity() {
         handler.postDelayed({
             // 4秒+1秒間後、無効化解除
             window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+
+            // TODO: insert function getting result labels by rotation angle
+
             // Show result dialog
-            // TODO: setup text of dialog
-            dialog.show()
+            // TODO: setup result labels
+            dialog.show(supportFragmentManager, "result_dialog")
         }, INNER_ANIMATION_TIME)
     }
 
