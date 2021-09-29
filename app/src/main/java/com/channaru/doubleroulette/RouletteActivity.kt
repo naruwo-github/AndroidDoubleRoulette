@@ -1,5 +1,6 @@
 package com.channaru.doubleroulette
 
+import android.app.AlertDialog
 import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -8,6 +9,7 @@ import android.os.Looper
 import android.view.WindowManager
 import android.view.animation.Animation
 import android.view.animation.RotateAnimation
+import android.widget.Toast
 import com.channaru.doubleroulette.databinding.ActivityRouletteBinding
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
@@ -19,6 +21,7 @@ class RouletteActivity : AppCompatActivity() {
     private lateinit var player: MediaPlayer
     private lateinit var bottomBannerAdView: AdView
     private lateinit var handler: Handler
+    private lateinit var dialog: AlertDialog
 
     private var fromDegreesOuter = 0F   // 外側ルーレットの開始角度
     private var fromDegreesInner = 0F   // 内側ルーレットの開始角度
@@ -29,7 +32,7 @@ class RouletteActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         initView()
         setupAd()
-        setupHandler()
+        setupHandlerAndDialog()
         setupBackButton()
         setupStartButton()
     }
@@ -41,8 +44,16 @@ class RouletteActivity : AppCompatActivity() {
         setContentView(view)
     }
 
-    private fun setupHandler() {
+    private fun setupHandlerAndDialog() {
         handler = Handler(Looper.getMainLooper())
+        // TODO: Replace this to custom dialog
+        dialog = AlertDialog.Builder(this)
+            .setTitle("title")
+            .setMessage("message")
+            .setPositiveButton("OK") { _, _ ->
+                Toast.makeText(this, "OK tapped", Toast.LENGTH_SHORT).show()
+            }
+            .create()
     }
 
     private fun setupAd() {
@@ -69,8 +80,20 @@ class RouletteActivity : AppCompatActivity() {
             toDegreesInner -= toDegrees
 
             // 回転アニメーションを開始
-            binding.outerRouletteFragmentView.startAnimation(makeRotation(fromDegreesOuter, toDegreesOuter, OUTER_ANIMATION_TIME))
-            binding.innerRouletteFragmentView.startAnimation(makeRotation(fromDegreesInner, toDegreesInner, INNER_ANIMATION_TIME))
+            binding.outerRouletteFragmentView.startAnimation(
+                makeRotation(
+                    fromDegreesOuter,
+                    toDegreesOuter,
+                    OUTER_ANIMATION_TIME
+                )
+            )
+            binding.innerRouletteFragmentView.startAnimation(
+                makeRotation(
+                    fromDegreesInner,
+                    toDegreesInner,
+                    INNER_ANIMATION_TIME
+                )
+            )
 
             // 回転角度を保存して更新
             fromDegreesOuter = toDegreesOuter
@@ -84,10 +107,17 @@ class RouletteActivity : AppCompatActivity() {
         handler.postDelayed({
             // 4秒+1秒間後、無効化解除
             window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+            // Show result dialog
+            // TODO: setup text of dialog
+            dialog.show()
         }, INNER_ANIMATION_TIME)
     }
 
-    private fun makeRotation(fromDegrees: Float, toDegrees: Float, duration: Long): RotateAnimation {
+    private fun makeRotation(
+        fromDegrees: Float,
+        toDegrees: Float,
+        duration: Long
+    ): RotateAnimation {
         val rotation = RotateAnimation(
             fromDegrees, toDegrees,
             Animation.RELATIVE_TO_SELF, 0.5F,
@@ -101,6 +131,7 @@ class RouletteActivity : AppCompatActivity() {
     companion object {
         // 外側ルーレットの回転時間（4秒）
         private const val OUTER_ANIMATION_TIME = 4000L
+
         // 内側ルーレットの回転時間（5秒＝音楽ファイルが鳴り止むまでの時間）
         private const val INNER_ANIMATION_TIME = 5000L
     }
