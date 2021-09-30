@@ -1,14 +1,13 @@
 package com.channaru.doubleroulette
 
 import android.media.MediaPlayer
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.WindowManager
 import android.view.animation.Animation
 import android.view.animation.RotateAnimation
-import androidx.fragment.app.DialogFragment
+import androidx.appcompat.app.AppCompatActivity
 import com.channaru.doubleroulette.databinding.ActivityRouletteBinding
 import com.channaru.doubleroulette.view.ResultDialog
 import com.google.android.gms.ads.AdRequest
@@ -21,7 +20,7 @@ class RouletteActivity : AppCompatActivity() {
     private lateinit var player: MediaPlayer
     private lateinit var bottomBannerAdView: AdView
     private lateinit var handler: Handler
-    private lateinit var dialog: DialogFragment
+    private lateinit var dialog: ResultDialog
 
     private var fromDegreesOuter = 0F   // 外側ルーレットの開始角度
     private var fromDegreesInner = 0F   // 内側ルーレットの開始角度
@@ -37,7 +36,6 @@ class RouletteActivity : AppCompatActivity() {
         setupStartButton()
     }
 
-    // 本Viewの初期化処理
     private fun initView() {
         binding = ActivityRouletteBinding.inflate(layoutInflater)
         val view = binding.root
@@ -46,7 +44,7 @@ class RouletteActivity : AppCompatActivity() {
 
     private fun setupHandlerAndDialog() {
         handler = Handler(Looper.getMainLooper())
-        dialog = ResultDialog()
+        dialog = ResultDialog(this)
     }
 
     private fun setupAd() {
@@ -102,10 +100,10 @@ class RouletteActivity : AppCompatActivity() {
             window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
 
             // TODO: insert function getting result labels by rotation angle
-
+            val resultLabel = "aaa"
+            dialog.setupResultLabel(resultLabel)
             // Show result dialog
-            // TODO: setup result labels
-            dialog.show(supportFragmentManager, "result_dialog")
+            dialog.show()
         }, INNER_ANIMATION_TIME)
     }
 
