@@ -9,6 +9,7 @@ import android.view.animation.Animation
 import android.view.animation.RotateAnimation
 import androidx.appcompat.app.AppCompatActivity
 import com.channaru.doubleroulette.databinding.ActivityRouletteBinding
+import com.channaru.doubleroulette.model.RealmHelper
 import com.channaru.doubleroulette.view.ResultDialog
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
@@ -100,9 +101,34 @@ class RouletteActivity : AppCompatActivity() {
             window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
 
             // TODO: insert function getting result labels by rotation angle
-            val resultLabel = "aaa"
+            val innerRouletteData = RealmHelper.getInnerRouletteData()
+            val innerPieceAngle = -360F / innerRouletteData.count()
+            // 針が90度分回転に進んでいるので、減算（TODO: ???この考えがそもそも間違ってる）
+            val innerDegree = (fromDegreesInner - 90F) % (-360F)
+            var innerResult = ""
+            if (innerRouletteData.count() > 0) {
+                for (i in 0 until innerRouletteData.count()) {
+                    if (i * innerPieceAngle > innerDegree && innerDegree >= (i+1) * innerPieceAngle ) {
+                        innerResult = innerRouletteData[i]!!.itemName
+                    }
+                }
+            }
+
+            val outerRouletteData = RealmHelper.getOuterRouletteData()
+            val outerPieceAngle = 360F / outerRouletteData.count()
+            // 針が90度分回転に遅れているので、加算
+            val outerDegree = (fromDegreesOuter + 90F) % 360F
+            var outerResult = ""
+            if (outerRouletteData.count() > 0) {
+                for (i in 0 until outerRouletteData.count()) {
+                    if (i * outerPieceAngle <= outerDegree && outerDegree < (i+1) * outerPieceAngle ) {
+                        outerResult = outerRouletteData[i]!!.itemName
+                    }
+                }
+            }
+
+            val resultLabel = "Outer: $outerResult\nInner: $innerResult"
             dialog.setupResultLabel(resultLabel)
-            // Show result dialog
             dialog.show()
         }, INNER_ANIMATION_TIME)
     }
