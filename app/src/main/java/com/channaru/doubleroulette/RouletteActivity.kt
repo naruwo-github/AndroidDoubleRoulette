@@ -102,7 +102,7 @@ class RouletteActivity : AppCompatActivity() {
             val outerResult = getSelectedOuterLabel()
             val innerResult = getSelectedInnerLabel()
             var resultLabel = if (outerResult.isEmpty()) "" else "Outer: ${outerResult}\n"
-            resultLabel += if (innerResult.isEmpty()) "" else "Inner: ${innerResult}"
+            resultLabel += if (innerResult.isEmpty()) "" else "Inner: $innerResult"
             dialog.setupResultLabel(resultLabel)
             dialog.show()
         }, INNER_ANIMATION_TIME)
@@ -116,7 +116,7 @@ class RouletteActivity : AppCompatActivity() {
         val outerDegree = (fromDegreesOuter + 90F) % 360F
         if (outerRouletteData.count() > 0) {
             for (i in 0 until outerRouletteData.count()) {
-                if (i * outerPieceAngle <= outerDegree && outerDegree < (i+1) * outerPieceAngle ) {
+                if (i * outerPieceAngle <= outerDegree && outerDegree < (i + 1) * outerPieceAngle) {
                     outerResult = outerRouletteData[i]!!.itemName
                 }
             }
@@ -124,16 +124,18 @@ class RouletteActivity : AppCompatActivity() {
         return outerResult
     }
 
-    // TODO: 計算がおかしい
+    // TODO: 計算がおかしい???
+    // TODO: あってる場合も多いが
+    // TODO: 間違った時もある、、、
     private fun getSelectedInnerLabel(): String {
         var innerResult = ""
         val innerRouletteData = RealmHelper.getInnerRouletteData()
         val innerPieceAngle = -360F / innerRouletteData.count()
-        // 針が90度分回転に進んでいるので、減算（TODO: ???この考えがそもそも間違ってる）
-        val innerDegree = (fromDegreesInner - 90F) % (-360F)
+        // 反時計回りに270度回転した位置が開始点とする(mod -360度)
+        val innerDegree = (fromDegreesInner + 270F + 180F) % (-360F)
         if (innerRouletteData.count() > 0) {
             for (i in 0 until innerRouletteData.count()) {
-                if (i * innerPieceAngle > innerDegree && innerDegree >= (i+1) * innerPieceAngle ) {
+                if ((i + 1) * innerPieceAngle < innerDegree && innerDegree <= i * innerPieceAngle) {
                     innerResult = innerRouletteData[i]!!.itemName
                 }
             }
