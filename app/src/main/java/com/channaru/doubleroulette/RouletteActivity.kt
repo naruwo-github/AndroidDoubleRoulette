@@ -99,23 +99,10 @@ class RouletteActivity : AppCompatActivity() {
         handler.postDelayed({
             // 4秒+1秒間後、無効化解除
             window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-
-            // TODO: insert function getting result labels by rotation angle
-            val innerRouletteData = RealmHelper.getInnerRouletteData()
-            val innerPieceAngle = -360F / innerRouletteData.count()
-            // 針が90度分回転に進んでいるので、減算（TODO: ???この考えがそもそも間違ってる）
-            val innerDegree = (fromDegreesInner - 90F) % (-360F)
-            var innerResult = ""
-            if (innerRouletteData.count() > 0) {
-                for (i in 0 until innerRouletteData.count()) {
-                    if (i * innerPieceAngle > innerDegree && innerDegree >= (i+1) * innerPieceAngle ) {
-                        innerResult = innerRouletteData[i]!!.itemName
-                    }
-                }
-            }
-
             val outerResult = getSelectedOuterLabel()
-            val resultLabel = "Outer: $outerResult\nInner: $innerResult"
+            val innerResult = getSelectedInnerLabel()
+            var resultLabel = if (outerResult.isEmpty()) "" else "Outer: ${outerResult}\n"
+            resultLabel += if (innerResult.isEmpty()) "" else "Inner: ${innerResult}"
             dialog.setupResultLabel(resultLabel)
             dialog.show()
         }, INNER_ANIMATION_TIME)
@@ -135,6 +122,23 @@ class RouletteActivity : AppCompatActivity() {
             }
         }
         return outerResult
+    }
+
+    // TODO: 計算がおかしい
+    private fun getSelectedInnerLabel(): String {
+        var innerResult = ""
+        val innerRouletteData = RealmHelper.getInnerRouletteData()
+        val innerPieceAngle = -360F / innerRouletteData.count()
+        // 針が90度分回転に進んでいるので、減算（TODO: ???この考えがそもそも間違ってる）
+        val innerDegree = (fromDegreesInner - 90F) % (-360F)
+        if (innerRouletteData.count() > 0) {
+            for (i in 0 until innerRouletteData.count()) {
+                if (i * innerPieceAngle > innerDegree && innerDegree >= (i+1) * innerPieceAngle ) {
+                    innerResult = innerRouletteData[i]!!.itemName
+                }
+            }
+        }
+        return innerResult
     }
 
     private fun makeRotation(
