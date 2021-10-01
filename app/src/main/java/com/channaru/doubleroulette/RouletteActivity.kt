@@ -114,23 +114,27 @@ class RouletteActivity : AppCompatActivity() {
                 }
             }
 
-            val outerRouletteData = RealmHelper.getOuterRouletteData()
-            val outerPieceAngle = 360F / outerRouletteData.count()
-            // 針が90度分回転に遅れているので、加算
-            val outerDegree = (fromDegreesOuter + 90F) % 360F
-            var outerResult = ""
-            if (outerRouletteData.count() > 0) {
-                for (i in 0 until outerRouletteData.count()) {
-                    if (i * outerPieceAngle <= outerDegree && outerDegree < (i+1) * outerPieceAngle ) {
-                        outerResult = outerRouletteData[i]!!.itemName
-                    }
-                }
-            }
-
+            val outerResult = getSelectedOuterLabel()
             val resultLabel = "Outer: $outerResult\nInner: $innerResult"
             dialog.setupResultLabel(resultLabel)
             dialog.show()
         }, INNER_ANIMATION_TIME)
+    }
+
+    private fun getSelectedOuterLabel(): String {
+        var outerResult = ""
+        val outerRouletteData = RealmHelper.getOuterRouletteData()
+        val outerPieceAngle = 360F / outerRouletteData.count()
+        // 針が90度分回転に遅れているので、加算
+        val outerDegree = (fromDegreesOuter + 90F) % 360F
+        if (outerRouletteData.count() > 0) {
+            for (i in 0 until outerRouletteData.count()) {
+                if (i * outerPieceAngle <= outerDegree && outerDegree < (i+1) * outerPieceAngle ) {
+                    outerResult = outerRouletteData[i]!!.itemName
+                }
+            }
+        }
+        return outerResult
     }
 
     private fun makeRotation(
