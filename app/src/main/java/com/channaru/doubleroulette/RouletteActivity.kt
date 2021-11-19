@@ -1,14 +1,16 @@
 package com.channaru.doubleroulette
 
 import android.media.MediaPlayer
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.WindowManager
 import android.view.animation.Animation
 import android.view.animation.RotateAnimation
+import androidx.appcompat.app.AppCompatActivity
 import com.channaru.doubleroulette.databinding.ActivityRouletteBinding
+import com.channaru.doubleroulette.model.RealmHelper
+import com.channaru.doubleroulette.view.ResultDialog
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import kotlin.random.Random
@@ -19,6 +21,7 @@ class RouletteActivity : AppCompatActivity() {
     private lateinit var player: MediaPlayer
     private lateinit var bottomBannerAdView: AdView
     private lateinit var handler: Handler
+    private lateinit var dialog: ResultDialog
 
     private var fromDegreesOuter = 0F   // 外側ルーレットの開始角度
     private var fromDegreesInner = 0F   // 内側ルーレットの開始角度
@@ -29,20 +32,20 @@ class RouletteActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         initView()
         setupAd()
-        setupHandler()
+        setupHandlerAndDialog()
         setupBackButton()
         setupStartButton()
     }
 
-    // 本Viewの初期化処理
     private fun initView() {
         binding = ActivityRouletteBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
     }
 
-    private fun setupHandler() {
+    private fun setupHandlerAndDialog() {
         handler = Handler(Looper.getMainLooper())
+        dialog = ResultDialog(this)
     }
 
     private fun setupAd() {
@@ -69,8 +72,20 @@ class RouletteActivity : AppCompatActivity() {
             toDegreesInner -= toDegrees
 
             // 回転アニメーションを開始
-            binding.outerRouletteFragmentView.startAnimation(makeRotation(fromDegreesOuter, toDegreesOuter, OUTER_ANIMATION_TIME))
-            binding.innerRouletteFragmentView.startAnimation(makeRotation(fromDegreesInner, toDegreesInner, INNER_ANIMATION_TIME))
+            binding.outerRouletteFragmentView.startAnimation(
+                makeRotation(
+                    fromDegreesOuter,
+                    toDegreesOuter,
+                    OUTER_ANIMATION_TIME
+                )
+            )
+            binding.innerRouletteFragmentView.startAnimation(
+                makeRotation(
+                    fromDegreesInner,
+                    toDegreesInner,
+                    INNER_ANIMATION_TIME
+                )
+            )
 
             // 回転角度を保存して更新
             fromDegreesOuter = toDegreesOuter
@@ -84,10 +99,55 @@ class RouletteActivity : AppCompatActivity() {
         handler.postDelayed({
             // 4秒+1秒間後、無効化解除
             window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+            val outerResult = getSelectedOuterLabel()
+            val innerResult = getSelectedInnerLabel()
+            var resultLabel = if (outerResult.isEmpty()) "" else "Outer: ${outerResult}\n"
+            resultLabel += if (innerResult.isEmpty()) "" else "Inner: $innerResult"
+            dialog.setupResultLabel(resultLabel)
+            dialog.show()
         }, INNER_ANIMATION_TIME)
     }
 
-    private fun makeRotation(fromDegrees: Float, toDegrees: Float, duration: Long): RotateAnimation {
+    private fun getSelectedOuterLabel(): String {
+        var outerResult = ""
+        val outerRouletteData = RealmHelper.getOuterRouletteData()
+        val outerPieceAngle = 360F / outerRouletteData.count()
+        // 針が90度分回転に遅れているので、加算
+        val outerDegree = (fromDegreesOuter + 90F) % 360F
+        if (outerRouletteData.count() > 0) {
+            for (i in 0 until outerRouletteData.count()) {
+                if (i * outerPieceAngle <= outerDegree && outerDegree < (i + 1) * outerPieceAngle) {
+                    outerResult = outerRouletteData[i]!!.itemName
+                }
+            }
+        }
+        return outerResult
+    }
+
+    // TODO: 計算がおかしい???
+    // TODO: あってる場合も多いが
+    // TODO: 間違った時もある、、、
+    private fun getSelectedInnerLabel(): String {
+        var innerResult = ""
+        val innerRouletteData = RealmHelper.getInnerRouletteData()
+        val innerPieceAngle = -360F / innerRouletteData.count()
+        // 反時計回りに270度回転した位置が開始点とする(mod -360度)
+        val innerDegree = (fromDegreesInner + 270F + 180F) % (-360F)
+        if (innerRouletteData.count() > 0) {
+            for (i in 0 until innerRouletteData.count()) {
+                if ((i + 1) * innerPieceAngle < innerDegree && innerDegree <= i * innerPieceAngle) {
+                    innerResult = innerRouletteData[i]!!.itemName
+                }
+            }
+        }
+        return innerResult
+    }
+
+    private fun makeRotation(
+        fromDegrees: Float,
+        toDegrees: Float,
+        duration: Long
+    ): RotateAnimation {
         val rotation = RotateAnimation(
             fromDegrees, toDegrees,
             Animation.RELATIVE_TO_SELF, 0.5F,
@@ -101,6 +161,7 @@ class RouletteActivity : AppCompatActivity() {
     companion object {
         // 外側ルーレットの回転時間（4秒）
         private const val OUTER_ANIMATION_TIME = 4000L
+
         // 内側ルーレットの回転時間（5秒＝音楽ファイルが鳴り止むまでの時間）
         private const val INNER_ANIMATION_TIME = 5000L
     }
