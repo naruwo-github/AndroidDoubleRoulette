@@ -4,6 +4,8 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.37552083333333336" />
+        <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1835" />
+        <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.1835" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.2407226562499999" />
         <entry key="app/src/main/res/layout/activity_roulette.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_arrow_view.xml" value="0.34148550724637683" />
@@ -11,6 +13,7 @@
         <entry key="app/src/main/res/layout/fragment_outer_roulette.xml" value="0.353713768115942" />
         <entry key="app/src/main/res/layout/result_dialog.xml" value="0.302536231884058" />
         <entry key="app/src/main/res/layout/roulette_cell.xml" value="0.335" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1835" />
       </map>
     </option>
   </component>
