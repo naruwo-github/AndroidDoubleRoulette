@@ -99,49 +99,52 @@ class RouletteActivity : AppCompatActivity() {
         handler.postDelayed({
             // 4秒+1秒間後、無効化解除
             window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-            val outerResult = getSelectedOuterLabel()
-            val innerResult = getSelectedInnerLabel()
-            var resultLabel = if (outerResult.isEmpty()) "" else "Outer: ${outerResult}\n"
-            resultLabel += if (innerResult.isEmpty()) "" else "Inner: $innerResult"
-            dialog.setupResultLabel(resultLabel)
-            dialog.show()
+            // TODO: 結果ラベルはうまく取得できず未完了
+//            val outerResult = getSelectedOuterLabel()
+//            val innerResult = getSelectedInnerLabel()
+//            var resultLabel = if (outerResult.isEmpty()) "" else "Outer: ${outerResult}\n"
+//            resultLabel += if (innerResult.isEmpty()) "" else "Inner: $innerResult"
+//            dialog.setupResultLabel(resultLabel)
+//            dialog.show()
         }, INNER_ANIMATION_TIME)
     }
 
-    private fun getSelectedOuterLabel(): String {
-        var outerResult = ""
-        val outerRouletteData = RealmHelper.getOuterRouletteData()
-        val outerPieceAngle = 360F / outerRouletteData.count()
-        // 針が90度分回転に遅れているので、加算
-        val outerDegree = (fromDegreesOuter + 90F) % 360F
-        if (outerRouletteData.count() > 0) {
-            for (i in 0 until outerRouletteData.count()) {
-                if (i * outerPieceAngle <= outerDegree && outerDegree < (i + 1) * outerPieceAngle) {
-                    outerResult = outerRouletteData[i]!!.itemName
-                }
-            }
-        }
-        return outerResult
-    }
+    // TODO: 結果ラベルはうまく取得できず未完了
+//    private fun getSelectedOuterLabel(): String {
+//        var outerResult = ""
+//        val outerRouletteData = RealmHelper.getOuterRouletteData()
+//        val outerPieceAngle = 360F / outerRouletteData.count()
+//        // 針が90度分回転に遅れているので、加算
+//        val outerDegree = (fromDegreesOuter + 90F) % 360F
+//        if (outerRouletteData.count() > 0) {
+//            for (i in 0 until outerRouletteData.count()) {
+//                if (i * outerPieceAngle <= outerDegree && outerDegree < (i + 1) * outerPieceAngle) {
+//                    outerResult = outerRouletteData[i]!!.itemName
+//                }
+//            }
+//        }
+//        return outerResult
+//    }
 
     // TODO: 計算がおかしい???
     // TODO: あってる場合も多いが
     // TODO: 間違った時もある、、、
-    private fun getSelectedInnerLabel(): String {
-        var innerResult = ""
-        val innerRouletteData = RealmHelper.getInnerRouletteData()
-        val innerPieceAngle = -360F / innerRouletteData.count()
-        // 反時計回りに270度回転した位置が開始点とする(mod -360度)
-        val innerDegree = (fromDegreesInner + 270F + 180F) % (-360F)
-        if (innerRouletteData.count() > 0) {
-            for (i in 0 until innerRouletteData.count()) {
-                if ((i + 1) * innerPieceAngle < innerDegree && innerDegree <= i * innerPieceAngle) {
-                    innerResult = innerRouletteData[i]!!.itemName
-                }
-            }
-        }
-        return innerResult
-    }
+    // TODO: 結果ラベルはうまく取得できず未完了
+//    private fun getSelectedInnerLabel(): String {
+//        var innerResult = ""
+//        val innerRouletteData = RealmHelper.getInnerRouletteData()
+//        val innerPieceAngle = -360F / innerRouletteData.count()
+//        // 反時計回りに270度回転した位置が開始点とする(mod -360度)
+//        val innerDegree = (fromDegreesInner + 270F + 180F) % (-360F)
+//        if (innerRouletteData.count() > 0) {
+//            for (i in 0 until innerRouletteData.count()) {
+//                if ((i + 1) * innerPieceAngle < innerDegree && innerDegree <= i * innerPieceAngle) {
+//                    innerResult = innerRouletteData[i]!!.itemName
+//                }
+//            }
+//        }
+//        return innerResult
+//    }
 
     private fun makeRotation(
         fromDegrees: Float,
