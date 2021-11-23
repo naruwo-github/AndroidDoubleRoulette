@@ -5,6 +5,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
+import android.os.Build
 import android.view.View
 
 class ArrowView(context: Context) : View(context) {
@@ -19,6 +20,11 @@ class ArrowView(context: Context) : View(context) {
             paint.style = Paint.Style.FILL
             val viewHalfWidth = width.toFloat() / 2
             val viewHalfHeight = height.toFloat() / 2
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                if (context.theme.resources.configuration.isNightModeActive) {
+                    paint.color = Color.DKGRAY
+                }
+            }
             drawArrowTop(it, viewHalfWidth, viewHalfHeight)
             drawArrowBottom(it, viewHalfWidth, viewHalfHeight)
         }
