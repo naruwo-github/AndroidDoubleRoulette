@@ -22,16 +22,22 @@ import com.channaru.doubleroulette.view_model.DoubleRouletteModelAdapter
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 import vadiole.colorpicker.ColorModel
 import vadiole.colorpicker.ColorPickerDialog
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
     private lateinit var binding: ActivityMainBinding
     private lateinit var bottomBannerAdView: AdView
     private lateinit var colorHelper: ColorHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        firebaseAnalytics = Firebase.analytics
+
         colorHelper = ColorHelper()
 
         initView()

@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "950045523501",
+    "project_id": "myandroid-6c458",
+    "storage_bucket": "myandroid-6c458.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:950045523501:android:c445d1cd92cfd2f7c542a4",
+        "android_client_info": {
+          "package_name": "com.channaru.doubleroulette"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "950045523501-rmnfmicf3o28gm341if0j36dk710m4u9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4blD-9aPSdGjjGwsSI_2sBOeYs5U95s0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "950045523501-rmnfmicf3o28gm341if0j36dk710m4u9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      },
+      "admob_app_id": "ca-app-pub-6492692627915720~1944433334"
+    }
+  ],
+  "configuration_version": "1"
+}
